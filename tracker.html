@@ -28,7 +28,7 @@
             left: 0;
             z-index: 1;
         }
-        /* Sembunyikan atribut Leaflet */
+        /* Sembunyikan atribut Leaflet standar */
         .leaflet-control-attribution {
             display: none !important;
         }
@@ -146,7 +146,7 @@
             box-shadow: 0 0 10px #00ff66;
         }
 
-        /* Modal 360 Street View Viewer Simulator */
+        /* Modal 360 Street View */
         #street-view-modal {
             position: fixed;
             top: 0;
@@ -170,12 +170,6 @@
             background: #111;
             overflow: hidden;
             box-shadow: 0 0 25px rgba(0,255,102,0.4);
-        }
-        .sv-screen {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: contrast(1.1) brightness(0.9);
         }
         .sv-header {
             width: 100%;
@@ -212,7 +206,7 @@
             <div class="info-row">POSISI ANDA: <span id="my-coords">Mencari GPS...</span></div>
             <div class="info-row">TARGET ADELLE: <span id="target-coords">-8.5885, 120.5104</span></div>
             <div class="info-row">JARAK: <span id="distance">-</span></div>
-            <div class="info-row">STATUS GERAK: <span id="adelle-status" style="color:#00ff66;">Diam di Lokasi</span></div>
+            <div class="info-row">STATUS GERAK: <span id="adelle-status" style="color:#00ff66;">Aktif Bergerak</span></div>
             
             <div class="control-group">
                 <button class="btn-action" onclick="toggleMapLayer()">Ubah Satelit/Peta</button>
@@ -232,32 +226,31 @@
             <button class="close-sv" onclick="closeStreetView360()">TUTUP [X]</button>
         </div>
         <div class="sv-container">
-            <!-- Menampilkan simulasi tampilan panorama 360 derajat jalanan seperti google maps -->
-            <iframe id="sv-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src="https://www.google.com/maps/embed?pb=!4v1711000000000!6m8!1m7!1sCAoSLEFGMVFpcFB3VjFwN3p3cDZ4R3V4cm1VbW5MZU5WbV9wSlpwc21uOHlVVFph!2m2!1d-8.58852!2d120.5104!3f200!4f10!5f0.7820865974627469"></iframe>
+            <!-- Menggunakan embed peta interaktif standar yang pasti stabil dan bisa digeser -->
+            <iframe id="sv-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.493922123!2d120.5104!3d-8.5885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzUnMTguNyJTIDEyMMKwMzAnMzcuNCNF!5e1!3m2!1sid!2sid!4v1711000000000!5m2!1sid!2sid"></iframe>
         </div>
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Koordinat awal target (Adelle) di sekitar area Ruteng/Sumba/Flores sesuai referensi
         let targetCoords = [-8.5885, 120.5104]; 
 
         const map = L.map('map', {
             zoomControl: false
         }).setView(targetCoords, 17);
 
-        // 1. Layer Peta Jalan Standar (CartoDB Positron / OSM)
-        const streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            maxZoom: 20
+        // 1. Layer Peta Jalan Standar (OpenStreetMap murni tanpa API Key, bebas dari error "API Key Required")
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
         });
 
-        // 2. Layer Citra Satelit (Esri World Imagery - Sangat detail untuk melihat bangunan & pohon seperti Google Maps Satelit)
+        // 2. Layer Citra Satelit (Esri World Imagery untuk tampilan foto udara bangunan & alam)
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19
         });
 
-        // Set default awal ke Satelit agar langsung kelihatan bangunan/pohonnya
+        // Set default awal ke Satelit
         satelliteLayer.addTo(map);
         let isSatellite = true;
 
@@ -266,12 +259,12 @@
                 map.removeLayer(satelliteLayer);
                 streetLayer.addTo(map);
                 isSatellite = false;
-                alert("Peta beralih ke Tampilan Standar / Jalan.");
+                alert("Peta beralih ke Tampilan Jalan (OpenStreetMap).");
             } else {
                 map.removeLayer(streetLayer);
                 satelliteLayer.addTo(map);
                 isSatellite = true;
-                alert("Peta beralih ke Tampilan Satelit (Foto Udara Gedung & Alam).");
+                alert("Peta beralih ke Tampilan Satelit.");
             }
         }
 
@@ -296,7 +289,6 @@
         let userMarker = null;
         let userCoords = null;
 
-        // Formula Jarak
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -309,7 +301,6 @@
             return d > 1 ? d.toFixed(2) + " km" : (d * 1000).toFixed(0) + " meter";
         }
 
-        // GPS Pengguna Real-time
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition((position) => {
                 const lat = position.coords.latitude;
@@ -333,24 +324,21 @@
             }, { enableHighAccuracy: true });
         }
 
-        // Simulasi Pergerakan Adelle Jalan-Jalan secara Real-time otomatis di peta
-        let stepCount = 0;
+        // Simulasi pergerakan Adelle
         setInterval(() => {
-            // Simulasi geser koordinat sedikit agar terlihat seperti sedang berjalan-jalan
             targetCoords[0] += (Math.random() - 0.5) * 0.00015;
             targetCoords[1] += (Math.random() - 0.5) * 0.00015;
             
             targetMarker.setLatLng(targetCoords);
             document.getElementById('target-coords').innerText = `${targetCoords[0].toFixed(4)}, ${targetCoords[1].toFixed(4)}`;
-            document.getElementById('adelle-status').innerText = "Berjalan / Bergerak Aktif...";
+            document.getElementById('adelle-status').innerText = "Bergerak Aktif...";
 
             if(userCoords) {
                 const dist = calculateDistance(userCoords[0], userCoords[1], targetCoords[0], targetCoords[1]);
                 document.getElementById('distance').innerText = dist;
             }
-        }, 4000); // Bergerak setiap 4 detik
+        }, 4000);
 
-        // Tombol Kontrol
         function centerToUser() {
             if (userCoords) map.setView(userCoords, 18);
             else alert("Mendapatkan sinyal GPS Anda...");
@@ -361,7 +349,6 @@
             targetMarker.openPopup();
         }
 
-        // Fungsi Buka / Tutup 360° Street View Modal
         function openStreetView360() {
             document.getElementById('street-view-modal').style.display = 'flex';
         }
