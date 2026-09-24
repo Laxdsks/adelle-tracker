@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DualWorld Security Portal</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #050505;
+            color: #00ff66;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Kotak Login */
+        #login-container {
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid #00ff66;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+            text-align: center;
+            width: 320px;
+        }
+        h2 { margin-top: 0; font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 5px #00ff66; }
+        input {
+            width: 85%;
+            padding: 10px;
+            margin: 15px 0;
+            background: #000;
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            text-align: center;
+            font-family: inherit;
+            border-radius: 4px;
+            outline: none;
+        }
+        button {
+            width: 92%;
+            padding: 10px;
+            background: #00ff66;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        button:hover { background: #00cc52; box-shadow: 0 0 10px #00ff66; }
+        .error { color: #ff3333; font-size: 12px; margin-top: 10px; display: none; }
+
+        /* Layar Intro Animasi Hacker (Terminal Loading) */
+        #intro-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #030303;
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .terminal-text {
+            font-size: 15px;
+            line-height: 1.6;
+            text-shadow: 0 0 8px rgba(0, 255, 102, 0.5);
+        }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #00ff66;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- Kotak Login Utama -->
+    <div id="login-container">
+        <h2>ACCESS // RESTRICTED</h2>
+        <p style="font-size: 12px; color: #888;">Welcome, M. Fadillah</p>
+        <input type="password" id="pass-input" placeholder="Enter Security Key">
+        <button onclick="verifyLogin()">INITIALIZE</button>
+        <div id="err-msg" class="error">ACCESS DENIED: Invalid Key</div>
+    </div>
+
+    <!-- Intro Animasi Terminal Hacker -->
+    <div id="intro-screen">
+        <div class="terminal-text" id="terminal-log"></div>
+    </div>
+
+    <script>
+        function verifyLogin() {
+            const inputVal = document.getElementById('pass-input').value;
+            const targetPass = "28032004Dill";
+
+            if (inputVal === targetPass) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'flex';
+                runHackerIntro();
+            } else {
+                document.getElementById('err-msg').style.display = 'block';
+            }
+        }
+
+        function runHackerIntro() {
+            const logs = [
+                "> INITIALIZING SECURE HANDSHAKE...",
+                "> BYPASSING FIREWALL PROTOCOLS...",
+                "> AUTHENTICATING USER: M. FADILLAH [OK]",
+                "> ESTABLISHING ENCRYPTED SATELLITE LINK...",
+                "> LOADING DUALWORLD SYSTEM INTERFACE...",
+                "> ACCESS GRANTED. REDIRECTING..."
+            ];
+            
+            let logContainer = document.getElementById('terminal-log');
+            let index = 0;
+
+            function addLine() {
+                if (index < logs.length) {
+                    logContainer.innerHTML += logs[index] + "<br>";
+                    index++;
+                    setTimeout(addLine, 400); // Kecepatan ketik teks hacker
+                } else {
+                    setTimeout(() => {
+                        // Pindah ke halaman terpisah (tracker.html) setelah intro selesai
+                        window.location.href = "tracker.html";
+                    }, 800);
+                }
+            }
+            addLine();
+        }
+    </script>
+</body>
+</html>
