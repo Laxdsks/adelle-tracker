@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DualWorld // Command Center</title>
+    <!-- Leaflet CSS untuk Peta -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #050505;
+            color: #00ff66;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header Gaya Hacker */
+        header {
+            background: #0a0a0a;
+            border-bottom: 1px solid #00ff66;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.1);
+        }
+        h1 { margin: 0; font-size: 16px; letter-spacing: 1px; text-shadow: 0 0 5px #00ff66; }
+        .user-tag { font-size: 12px; color: #00cc52; border: 1px solid #00cc52; padding: 3px 8px; border-radius: 3px; }
+
+        /* Layout Utama */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Sidebar Menu Kiri */
+        sidebar {
+            width: 250px;
+            background: #080808;
+            border-right: 1px solid #1a331a;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .menu-btn {
+            background: #000;
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 10px;
+            text-align: left;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 3px;
+        }
+        .menu-btn:hover, .menu-btn.active {
+            background: #00ff66;
+            color: #000;
+            box-shadow: 0 0 8px #00ff66;
+            font-weight: bold;
+        }
+
+        /* Area Peta */
+        #map {
+            flex: 1;
+            height: 100%;
+            background: #111;
+        }
+
+        /* Panel Status Bawah */
+        .status-panel {
+            background: #0a0a0a;
+            border-top: 1px solid #00ff66;
+            padding: 10px 20px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .status-val { color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SYS.COMMAND // DUALWORLD TRACKER</h1>
+        <div class="user-tag">USER: M. FADILLAH [SECURE]</div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Menu Samping Ala Hacker -->
+        <sidebar>
+            <div style="font-size: 11px; color: #666; margin-bottom: 5px;">NAVIGATION MODULES</div>
+            <button class="menu-btn active">⚡ Live GPS Radar</button>
+            <button class="menu-btn" onclick="alert('Module encrypted / Under development')">🛰️ Satellite Feed</button>
+            <button class="menu-btn" onclick="alert('Database connection stable.')">📂 Target Telemetry</button>
+            <button class="menu-btn" onclick="window.location.href='index.html'">🔙 Logout System</button>
+        </sidebar>
+
+        <!-- Peta Interaktif -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Status Bawah -->
+    <div class="status-panel">
+        <div>Link Status: <span class="status-val" id="conn-status">CONNECTING TO FIREBASE...</span></div>
+        <div>Battery: <span class="status-val" id="batt-val">--%</span></div>
+        <div>Coordinates: <span class="status-val" id="coord-val">-- , --</span></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            databaseURL: "https://DATABASE_NAME.firebaseio.com" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Inisialisasi Peta
+        const map = L.map('map').setView([-8.57, 116.1], 15);
+
+        // Menggunakan tile layer gelap agar nuansa hackernya dapet
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        let marker = null;
+
+        // Ambil data Realtime dari Firebase
+        const trackerRef = ref(db, 'tracker/adelle');
+        onValue(trackerRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('conn-status').innerText = "SECURE & LIVE";
+                document.getElementById('batt-val').innerText = (data.battery || "100") + "%";
+                document.getElementById('coord-val').innerText = `${data.lat}, ${data.lng}`;
+
+                const latLng = [data.lat, data.lng];
+
+                if (marker) {
+                    marker.setLatLng(latLng);
+                } else {
+                    marker = L.marker(latLng).addTo(map).bindPopup("Target Location: Adelle").openPopup();
+                }
+                map.setView(latLng, 17);
+            } else {
+                document.getElementById('conn-status').innerText = "WAITING FOR TARGET SIGNAL...";
+            }
+        }, (error) => {
+            document.getElementById('conn-status').innerText = "ERROR: " + error.message;
+        });
+    </script>
+</body>
+</html>
