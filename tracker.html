@@ -174,10 +174,10 @@
             <div class="control-group">
                 <button class="btn-action" onclick="toggleMapLayer()">Ubah Satelit/Peta</button>
             </div>
-            <!-- Tombol langsung membuka Google Maps Asli di Tab Baru -->
+            <!-- Tombol langsung membuka Google Maps Asli dengan Query Koordinat -->
             <div class="control-group">
-                <button class="btn-action btn-user" onclick="openUserViewRealMap()">360° Posisi Saya (Maps Asli)</button>
-                <button class="btn-action btn-danger" onclick="openTargetViewRealMap()">360° Adelle (Maps Asli)</button>
+                <button class="btn-action btn-user" onclick="openUserViewRealMap()">360° Posisi Saya (Maps)</button>
+                <button class="btn-action btn-danger" onclick="openTargetViewRealMap()">360° Adelle (Maps)</button>
             </div>
             <div class="control-group">
                 <button class="btn-action" onclick="centerToUser()">Fokus GPS Saya</button>
@@ -305,19 +305,19 @@
             targetMarker.openPopup();
         }
 
-        // Membuka Google Maps Asli untuk Posisi Anda
+        // Membuka Google Maps Asli untuk Posisi Anda dengan Query Search
         function openUserViewRealMap() {
             if (userCoords) {
-                const url = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${userCoords[0]},${userCoords[1]}`;
+                const url = `https://www.google.com/maps/search/?api=1&query=${userCoords[0]},${userCoords[1]}`;
                 window.open(url, '_blank');
             } else {
                 alert("GPS Anda belum terdeteksi. Pastikan izin lokasi perangkat sudah diaktifkan.");
             }
         }
 
-        // Membuka Google Maps Asli untuk Adelle
+        // Membuka Google Maps Asli untuk Adelle dengan Query Search
         function openTargetViewRealMap() {
-            const url = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${targetCoords[0]},${targetCoords[1]}`;
+            const url = `https://www.google.com/maps/search/?api=1&query=${targetCoords[0]},${targetCoords[1]}`;
             window.open(url, '_blank');
         }
     </script>
