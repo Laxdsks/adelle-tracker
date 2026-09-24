@@ -3,168 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DualWorld // Command Center</title>
-    <!-- Leaflet CSS untuk Peta -->
+    <title>ADELLE_TRACKER // SAT-COM 360</title>
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #050505;
-            color: #00ff66;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        body, html {
+            width: 100%;
             height: 100vh;
+            background-color: #050505;
+            color: #00ff66;
             overflow: hidden;
         }
+        #map {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        /* Sembunyikan atribut Leaflet */
+        .leaflet-control-attribution {
+            display: none !important;
+        }
 
-        /* Header Gaya Hacker */
-        header {
-            background: #0a0a0a;
-            border-bottom: 1px solid #00ff66;
-            padding: 12px 20px;
+        /* Tactical HUD Overlay */
+        .hud-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px;
+        }
+        .hud-header {
+            background: rgba(5, 15, 10, 0.9);
+            border: 1px solid #00ff66;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.1);
+            pointer-events: auto;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
         }
-        h1 { margin: 0; font-size: 16px; letter-spacing: 1px; text-shadow: 0 0 5px #00ff66; }
-        .user-tag { font-size: 12px; color: #00cc52; border: 1px solid #00cc52; padding: 3px 8px; border-radius: 3px; }
-
-        /* Layout Utama */
-        .main-layout {
-            display: flex;
-            flex: 1;
-            position: relative;
+        .hud-title {
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #00ff66;
+            text-shadow: 0 0 5px #00ff66;
+        }
+        .hud-status {
+            font-size: 11px;
+            color: #ff3333;
+            animation: blink 1.2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        /* Sidebar Menu Kiri */
-        sidebar {
-            width: 250px;
-            background: #080808;
-            border-right: 1px solid #1a331a;
-            padding: 15px;
-            box-sizing: border-box;
+        .hud-footer {
+            background: rgba(5, 15, 10, 0.9);
+            border: 1px solid #00ff66;
+            padding: 12px;
+            pointer-events: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+            max-width: 340px;
         }
-        .menu-btn {
-            background: #000;
-            border: 1px solid #00ff66;
-            color: #00ff66;
-            padding: 10px;
-            text-align: left;
-            font-family: inherit;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            border-radius: 3px;
-        }
-        .menu-btn:hover, .menu-btn.active {
-            background: #00ff66;
-            color: #000;
-            box-shadow: 0 0 8px #00ff66;
-            font-weight: bold;
-        }
-
-        /* Area Peta */
-        #map {
-            flex: 1;
-            height: 100%;
-            background: #111;
-        }
-
-        /* Panel Status Bawah */
-        .status-panel {
-            background: #0a0a0a;
-            border-top: 1px solid #00ff66;
-            padding: 10px 20px;
-            font-size: 12px;
+        .info-row {
+            font-size: 11px;
             display: flex;
             justify-content: space-between;
         }
-        .status-val { color: #fff; font-weight: bold; }
+        .info-row span {
+            color: #fff;
+        }
+        .control-group {
+            display: flex;
+            gap: 5px;
+        }
+        .btn-action {
+            flex: 1;
+            background: #00ff66;
+            color: #000;
+            border: none;
+            padding: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+        .btn-action:hover {
+            background: #fff;
+            box-shadow: 0 0 8px #fff;
+        }
+        .btn-danger {
+            background: #ff3333;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #ff6666;
+        }
+
+        /* Marker Animasi Target */
+        .pulse-marker {
+            width: 22px;
+            height: 22px;
+            background: #ff3333;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 rgba(255, 51, 51, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.8); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 51, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
+        }
+        .user-marker {
+            width: 16px;
+            height: 16px;
+            background: #00ff66;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff66;
+        }
+
+        /* Modal 360 Street View Viewer Simulator */
+        #street-view-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .sv-container {
+            width: 100%;
+            max-width: 800px;
+            height: 70vh;
+            border: 2px solid #00ff66;
+            position: relative;
+            background: #111;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0,255,102,0.4);
+        }
+        .sv-screen {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.1) brightness(0.9);
+        }
+        .sv-header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            color: #00ff66;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .close-sv {
+            background: #ff3333;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>SYS.COMMAND // DUALWORLD TRACKER</h1>
-        <div class="user-tag">USER: M. FADILLAH [SECURE]</div>
-    </header>
+    <div id="map"></div>
 
-    <div class="main-layout">
-        <!-- Menu Samping Ala Hacker -->
-        <sidebar>
-            <div style="font-size: 11px; color: #666; margin-bottom: 5px;">NAVIGATION MODULES</div>
-            <button class="menu-btn active">⚡ Live GPS Radar</button>
-            <button class="menu-btn" onclick="alert('Module encrypted / Under development')">🛰️ Satellite Feed</button>
-            <button class="menu-btn" onclick="alert('Database connection stable.')">📂 Target Telemetry</button>
-            <button class="menu-btn" onclick="window.location.href='index.html'">🔙 Logout System</button>
-        </sidebar>
+    <!-- HUD Kontrol Taktis -->
+    <div class="hud-overlay">
+        <div class="hud-header">
+            <div class="hud-title">ADELLE_MAPS // LIVE 360° HUD</div>
+            <div class="hud-status" id="sat-status">● SAT_LOCKED</div>
+        </div>
 
-        <!-- Peta Interaktif -->
-        <div id="map"></div>
+        <div class="hud-footer">
+            <div class="info-row">POSISI ANDA: <span id="my-coords">Mencari GPS...</span></div>
+            <div class="info-row">TARGET ADELLE: <span id="target-coords">-8.5885, 120.5104</span></div>
+            <div class="info-row">JARAK: <span id="distance">-</span></div>
+            <div class="info-row">STATUS GERAK: <span id="adelle-status" style="color:#00ff66;">Diam di Lokasi</span></div>
+            
+            <div class="control-group">
+                <button class="btn-action" onclick="toggleMapLayer()">Ubah Satelit/Peta</button>
+                <button class="btn-action" onclick="openStreetView360()">Buka 360° View</button>
+            </div>
+            <div class="control-group">
+                <button class="btn-action" onclick="centerToUser()">Posisi Saya</button>
+                <button class="btn-action btn-danger" onclick="centerToTarget()">Lacak Adelle</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Status Bawah -->
-    <div class="status-panel">
-        <div>Link Status: <span class="status-val" id="conn-status">CONNECTING TO FIREBASE...</span></div>
-        <div>Battery: <span class="status-val" id="batt-val">--%</span></div>
-        <div>Coordinates: <span class="status-val" id="coord-val">-- , --</span></div>
+    <!-- Modal 360 Street View -->
+    <div id="street-view-modal">
+        <div class="sv-header">
+            <span>[ STREET VIEW 360° // AREA ADELLE ]</span>
+            <button class="close-sv" onclick="closeStreetView360()">TUTUP [X]</button>
+        </div>
+        <div class="sv-container">
+            <!-- Menampilkan simulasi tampilan panorama 360 derajat jalanan seperti google maps -->
+            <iframe id="sv-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src="https://www.google.com/maps/embed?pb=!4v1711000000000!6m8!1m7!1sCAoSLEFGMVFpcFB3VjFwN3p3cDZ4R3V4cm1VbW5MZU5WbV9wSlpwc21uOHlVVFph!2m2!1d-8.58852!2d120.5104!3f200!4f10!5f0.7820865974627469"></iframe>
+        </div>
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script>
+        // Koordinat awal target (Adelle) di sekitar area Ruteng/Sumba/Flores sesuai referensi
+        let targetCoords = [-8.5885, 120.5104]; 
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            databaseURL: "https://DATABASE_NAME.firebaseio.com" 
-        };
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView(targetCoords, 17);
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Inisialisasi Peta
-        const map = L.map('map').setView([-8.57, 116.1], 15);
-
-        // Menggunakan tile layer gelap agar nuansa hackernya dapet
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        let marker = null;
-
-        // Ambil data Realtime dari Firebase
-        const trackerRef = ref(db, 'tracker/adelle');
-        onValue(trackerRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('conn-status').innerText = "SECURE & LIVE";
-                document.getElementById('batt-val').innerText = (data.battery || "100") + "%";
-                document.getElementById('coord-val').innerText = `${data.lat}, ${data.lng}`;
-
-                const latLng = [data.lat, data.lng];
-
-                if (marker) {
-                    marker.setLatLng(latLng);
-                } else {
-                    marker = L.marker(latLng).addTo(map).bindPopup("Target Location: Adelle").openPopup();
-                }
-                map.setView(latLng, 17);
-            } else {
-                document.getElementById('conn-status').innerText = "WAITING FOR TARGET SIGNAL...";
-            }
-        }, (error) => {
-            document.getElementById('conn-status').innerText = "ERROR: " + error.message;
+        // 1. Layer Peta Jalan Standar (CartoDB Positron / OSM)
+        const streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            maxZoom: 20
         });
+
+        // 2. Layer Citra Satelit (Esri World Imagery - Sangat detail untuk melihat bangunan & pohon seperti Google Maps Satelit)
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19
+        });
+
+        // Set default awal ke Satelit agar langsung kelihatan bangunan/pohonnya
+        satelliteLayer.addTo(map);
+        let isSatellite = true;
+
+        function toggleMapLayer() {
+            if (isSatellite) {
+                map.removeLayer(satelliteLayer);
+                streetLayer.addTo(map);
+                isSatellite = false;
+                alert("Peta beralih ke Tampilan Standar / Jalan.");
+            } else {
+                map.removeLayer(streetLayer);
+                satelliteLayer.addTo(map);
+                isSatellite = true;
+                alert("Peta beralih ke Tampilan Satelit (Foto Udara Gedung & Alam).");
+            }
+        }
+
+        // Icon Target Adelle & User
+        const targetIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div class="pulse-marker"></div>',
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+        });
+
+        const userIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div class="user-marker"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+
+        const targetMarker = L.marker(targetCoords, {icon: targetIcon}).addTo(map)
+            .bindPopup("<b style='color:red;'>TARGET: ADELLE</b><br>Status: Terdeteksi Berada di Sini");
+
+        let userMarker = null;
+        let userCoords = null;
+
+        // Formula Jarak
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const d = R * c;
+            return d > 1 ? d.toFixed(2) + " km" : (d * 1000).toFixed(0) + " meter";
+        }
+
+        // GPS Pengguna Real-time
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition((position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                userCoords = [lat, lon];
+
+                document.getElementById('my-coords').innerText = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+
+                if (!userMarker) {
+                    userMarker = L.marker(userCoords, {icon: userIcon}).addTo(map)
+                        .bindPopup("<b style='color:#00ff66;'>POSISI ANDA</b>");
+                } else {
+                    userMarker.setLatLng(userCoords);
+                }
+
+                const dist = calculateDistance(lat, lon, targetCoords[0], targetCoords[1]);
+                document.getElementById('distance').innerText = dist;
+
+            }, (error) => {
+                document.getElementById('my-coords').innerText = "GPS Aktifkan di Perangkat";
+            }, { enableHighAccuracy: true });
+        }
+
+        // Simulasi Pergerakan Adelle Jalan-Jalan secara Real-time otomatis di peta
+        let stepCount = 0;
+        setInterval(() => {
+            // Simulasi geser koordinat sedikit agar terlihat seperti sedang berjalan-jalan
+            targetCoords[0] += (Math.random() - 0.5) * 0.00015;
+            targetCoords[1] += (Math.random() - 0.5) * 0.00015;
+            
+            targetMarker.setLatLng(targetCoords);
+            document.getElementById('target-coords').innerText = `${targetCoords[0].toFixed(4)}, ${targetCoords[1].toFixed(4)}`;
+            document.getElementById('adelle-status').innerText = "Berjalan / Bergerak Aktif...";
+
+            if(userCoords) {
+                const dist = calculateDistance(userCoords[0], userCoords[1], targetCoords[0], targetCoords[1]);
+                document.getElementById('distance').innerText = dist;
+            }
+        }, 4000); // Bergerak setiap 4 detik
+
+        // Tombol Kontrol
+        function centerToUser() {
+            if (userCoords) map.setView(userCoords, 18);
+            else alert("Mendapatkan sinyal GPS Anda...");
+        }
+
+        function centerToTarget() {
+            map.setView(targetCoords, 18);
+            targetMarker.openPopup();
+        }
+
+        // Fungsi Buka / Tutup 360° Street View Modal
+        function openStreetView360() {
+            document.getElementById('street-view-modal').style.display = 'flex';
+        }
+
+        function closeStreetView360() {
+            document.getElementById('street-view-modal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
