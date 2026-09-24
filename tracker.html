@@ -82,7 +82,7 @@
             flex-direction: column;
             gap: 6px;
             box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
-            max-width: 360px;
+            max-width: 380px;
         }
         .info-row {
             font-size: 11px;
@@ -215,16 +215,19 @@
             <div class="info-row">JARAK: <span id="distance">-</span></div>
             <div class="info-row">STATUS GERAK: <span id="adelle-status" style="color:#00ff66;">Aktif Bergerak</span></div>
             
+            <!-- Tombol Kontrol Peta -->
             <div class="control-group">
                 <button class="btn-action" onclick="toggleMapLayer()">Ubah Satelit/Peta</button>
-                <button class="btn-action" onclick="openTargetView()">360° Adelle</button>
             </div>
+            <!-- Tombol 360 Terpisah untuk Posisi Anda dan Adelle -->
             <div class="control-group">
                 <button class="btn-action btn-user" onclick="openUserView()">360° Posisi Saya</button>
+                <button class="btn-action btn-danger" onclick="openTargetView()">360° Adelle</button>
             </div>
+            <!-- Tombol Navigasi Fokus Peta -->
             <div class="control-group">
-                <button class="btn-action" onclick="centerToUser()">Fokus Posisi Saya</button>
-                <button class="btn-action btn-danger" onclick="centerToTarget()">Lacak Adelle</button>
+                <button class="btn-action" onclick="centerToUser()">Fokus GPS Saya</button>
+                <button class="btn-action btn-danger" onclick="centerToTarget()">Fokus Adelle</button>
             </div>
         </div>
     </div>
@@ -359,7 +362,7 @@
             targetMarker.openPopup();
         }
 
-        // Fungsi Membuka Tampilan 360/Detail untuk Adelle
+        // Fungsi Membuka Tampilan Detail untuk Adelle
         function openTargetView() {
             const iframeUrl = `https://maps.google.com/maps?q=${targetCoords[0]},${targetCoords[1]}&t=h&z=19&output=embed`;
             document.getElementById('sv-iframe').src = iframeUrl;
@@ -367,7 +370,7 @@
             document.getElementById('street-view-modal').style.display = 'flex';
         }
 
-        // Fungsi Membuka Tampilan 360/Detail untuk Posisi Anda Sendiri
+        // Fungsi Membuka Tampilan Detail khusus untuk POSISI ANDA SENDIRI
         function openUserView() {
             if (userCoords) {
                 const iframeUrl = `https://maps.google.com/maps?q=${userCoords[0]},${userCoords[1]}&t=h&z=19&output=embed`;
