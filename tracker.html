@@ -152,50 +152,6 @@
             border-radius: 50%;
             box-shadow: 0 0 10px #00ff66;
         }
-
-        /* Modal View Detail */
-        #street-view-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.95);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .sv-container {
-            width: 100%;
-            max-width: 800px;
-            height: 70vh;
-            border: 2px solid #00ff66;
-            position: relative;
-            background: #111;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0,255,102,0.4);
-        }
-        .sv-header {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            justify-content: space-between;
-            color: #00ff66;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .close-sv {
-            background: #ff3333;
-            color: #fff;
-            border: none;
-            padding: 5px 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -218,25 +174,15 @@
             <div class="control-group">
                 <button class="btn-action" onclick="toggleMapLayer()">Ubah Satelit/Peta</button>
             </div>
+            <!-- Tombol langsung membuka Google Maps Asli di Tab Baru -->
             <div class="control-group">
-                <button class="btn-action btn-user" onclick="openUserView()">360° Posisi Saya</button>
-                <button class="btn-action btn-danger" onclick="openTargetView()">360° Adelle</button>
+                <button class="btn-action btn-user" onclick="openUserViewRealMap()">360° Posisi Saya (Maps Asli)</button>
+                <button class="btn-action btn-danger" onclick="openTargetViewRealMap()">360° Adelle (Maps Asli)</button>
             </div>
             <div class="control-group">
                 <button class="btn-action" onclick="centerToUser()">Fokus GPS Saya</button>
                 <button class="btn-action btn-danger" onclick="centerToTarget()">Fokus Adelle</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal View Detail -->
-    <div id="street-view-modal">
-        <div class="sv-header">
-            <span id="sv-title">[ STREET VIEW 360° ]</span>
-            <button class="close-sv" onclick="closeStreetView360()">TUTUP [X]</button>
-        </div>
-        <div class="sv-container">
-            <iframe id="sv-iframe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" src=""></iframe>
         </div>
     </div>
 
@@ -359,29 +305,20 @@
             targetMarker.openPopup();
         }
 
-        // Fungsi Membuka Street View 360° untuk Adelle
-        function openTargetView() {
-            const iframeUrl = `https://maps.google.com/maps?q=&layer=c&cbll=${targetCoords[0]},${targetCoords[1]}&cbp=11,0,0,0,0&output=svembed`;
-            document.getElementById('sv-iframe').src = iframeUrl;
-            document.getElementById('sv-title').innerText = '[ STREET VIEW 360° // AREA ADELLE ]';
-            document.getElementById('street-view-modal').style.display = 'flex';
-        }
-
-        // Fungsi Membuka Street View 360° untuk Posisi Anda
-        function openUserView() {
+        // Membuka Google Maps Asli untuk Posisi Anda
+        function openUserViewRealMap() {
             if (userCoords) {
-                const iframeUrl = `https://maps.google.com/maps?q=&layer=c&cbll=${userCoords[0]},${userCoords[1]}&cbp=11,0,0,0,0&output=svembed`;
-                document.getElementById('sv-iframe').src = iframeUrl;
-                document.getElementById('sv-title').innerText = '[ STREET VIEW 360° // POSISI SAYA ]';
-                document.getElementById('street-view-modal').style.display = 'flex';
+                const url = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${userCoords[0]},${userCoords[1]}`;
+                window.open(url, '_blank');
             } else {
                 alert("GPS Anda belum terdeteksi. Pastikan izin lokasi perangkat sudah diaktifkan.");
             }
         }
 
-        function closeStreetView360() {
-            document.getElementById('street-view-modal').style.display = 'none';
-            document.getElementById('sv-iframe').src = '';
+        // Membuka Google Maps Asli untuk Adelle
+        function openTargetViewRealMap() {
+            const url = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${targetCoords[0]},${targetCoords[1]}`;
+            window.open(url, '_blank');
         }
     </script>
 </body>
