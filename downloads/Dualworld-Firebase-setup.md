@@ -22,8 +22,12 @@ Hanya pembuat ruang perlu menyiapkan konfigurasi secara manual. Tautan membawa k
 
 Pesan aplikasi menunjukkan prasyarat yang belum aktif: Anonymous perlu diaktifkan jika muncul pesan metode masuk; aturan perlu diterbitkan jika muncul akses database ditolak. Citra satelit memakai tingkat detail yang tersedia di wilayah tersebut dan memperbesarnya jika zoom lebih dekat tidak mempunyai citra.
 
-Konfigurasi Web proyek telah dibundel ke APK 1.3.0. Pada 9 Oktober 2026, pemeriksaan langsung proyek ini lulus 26 pemeriksaan: Anonymous aktif, pembuat dapat membuat ruang, pihak luar ditolak, pasangan meminta akses dan disetujui, koordinat uji dibaca dua arah, data dihapus saat berhenti berbagi, serta akses terputus setelah keluar. Koordinat yang digunakan adalah data uji, dan ruang serta akun uji sudah dihapus. Perilaku GPS dan izin perangkat tetap perlu dicoba pada kedua HP.
+Konfigurasi Web proyek telah dibundel ke APK 1.3.0 dan tetap disertakan pada 1.4.0. Pada 9 Oktober 2026, pemeriksaan langsung proyek ini lulus 26 pemeriksaan: Anonymous aktif, pembuat dapat membuat ruang, pihak luar ditolak, pasangan meminta akses dan disetujui, koordinat uji dibaca dua arah, data dihapus saat berhenti berbagi, serta akses terputus setelah keluar. Koordinat yang digunakan adalah data uji, dan ruang serta akun uji sudah dihapus. Perilaku GPS dan izin perangkat tetap perlu dicoba pada kedua HP.
 
 ## Memperbarui dari 1.2.1
 
 Pasang APK 1.3.0 di atas instalasi yang ada pada kedua HP; jangan hapus data aplikasi agar identitas dan ruang tetap tersimpan. Setelah pembaruan pertama, aktifkan Mulai berbagi sekali pada setiap HP dan setujui izin lokasi/notifikasi. Versi lama belum memiliki pilihan berbagi yang persisten. Tidak perlu membuat ulang proyek atau memasang ulang aturan Firebase. Tutup layar Dualworld atau kunci layar untuk penggunaan sehari-hari; gunakan Hentikan berbagi hanya saat memang ingin menghentikan dan menghapus posisi. Atur baterai Dualworld ke aktivitas latar diizinkan / tidak dibatasi jika HP menerapkan pembatasan tambahan.
+
+## Pembaruan peta 1.4.0
+
+Pasang APK 1.4.0 di atas versi 1.3.0 dengan tanda tangan yang sama. Profil, ruang, dan pilihan berbagi yang tersimpan tetap digunakan. Tidak perlu proyek Firebase atau aturan baru. Setup foto jalan Mapillary terpisah dan tidak memerlukan billing Google; lihat **Dualworld-Maps-setup.md** / `MAPS_SETUP.md`. Fitur foto jalan belum aktif sampai Client Access Token aplikasi disiapkan.
