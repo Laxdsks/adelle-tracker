@@ -28,6 +28,8 @@ Konfigurasi Web proyek telah dibundel ke APK 1.3.0 dan tetap disertakan pada 1.4
 
 Pasang APK 1.3.0 di atas instalasi yang ada pada kedua HP; jangan hapus data aplikasi agar identitas dan ruang tetap tersimpan. Setelah pembaruan pertama, aktifkan Mulai berbagi sekali pada setiap HP dan setujui izin lokasi/notifikasi. Versi lama belum memiliki pilihan berbagi yang persisten. Tidak perlu membuat ulang proyek atau memasang ulang aturan Firebase. Tutup layar Dualworld atau kunci layar untuk penggunaan sehari-hari; gunakan Hentikan berbagi hanya saat memang ingin menghentikan dan menghapus posisi. Atur baterai Dualworld ke aktivitas latar diizinkan / tidak dibatasi jika HP menerapkan pembatasan tambahan.
 
-## Pembaruan peta 1.4.0
+## Pembaruan lokasi dan peta 1.4.1
 
-Pasang APK 1.4.0 di atas versi 1.3.0 dengan tanda tangan yang sama. Profil, ruang, dan pilihan berbagi yang tersimpan tetap digunakan. Tidak perlu proyek Firebase atau aturan baru. Setup foto jalan Mapillary terpisah dan tidak memerlukan billing Google; lihat **Dualworld-Maps-setup.md** / `MAPS_SETUP.md`. Fitur foto jalan belum aktif sampai Client Access Token aplikasi disiapkan.
+Pasang APK 1.4.1 di atas versi yang ada pada **kedua HP**, tanpa menghapus data. Tanda tangan, profil, ruang, dan pilihan berbagi tetap digunakan. Tidak perlu proyek Firebase atau aturan baru. Konfigurasi Mapillary sudah dibundel; lihat **Dualworld-Maps-setup.md** / `MAPS_SETUP.md` untuk batas cakupan foto.
+
+Nyalakan **Lokasi/GPS**, pilih izin **Lokasi akurat**, dan pastikan internet kedua HP aktif. Android meminta pembacaan GPS setiap 1 detik dan mengirim bacaan baru maksimal setiap 2 detik; sensor/koneksi dapat lebih lambat. Bacaan di atas radius ketidakpastian 35 m tidak dikirim. Coba dekat jendela atau di luar rumah jika menunggu GPS akurat. **Posisi** mengikuti pasangan, tombol bidik mengikuti diri sendiri; geser peta untuk berhenti mengikuti. Lingkaran menunjukkan ketidakpastian GPS, bukan batas bangunan. HP mati mempertahankan posisi terakhir dan waktu asli, tetapi tidak dapat mengirim pergerakan baru.
