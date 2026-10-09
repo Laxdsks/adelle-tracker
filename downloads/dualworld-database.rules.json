@@ -1,0 +1,44 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "pairs": {
+      "$pairId": {
+        ".read": "auth != null && data.child('members').child(auth.uid).val() === true",
+        ".write": "auth != null && ((!data.exists() && newData.child('owner').val() === auth.uid && newData.child('members').child(auth.uid).val() === true && !newData.child('partnerUid').exists()) || (data.exists() && data.child('owner').val() === auth.uid && !newData.exists()))",
+        ".validate": "newData.hasChildren(['owner', 'members']) && newData.child('members').child(newData.child('owner').val()).val() === true",
+        "partnerUid": {
+          ".write": "auth != null && ((auth.uid === data.parent().child('owner').val() && newData.isString() && (!data.exists() || newData.val() === data.val())) || (!newData.exists() && data.exists() && (auth.uid === data.parent().child('owner').val() || auth.uid === data.val()) && !data.parent().child('members').child(data.val()).exists()))",
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 128 && newData.val() !== data.parent().child('owner').val()"
+        },
+        "members": {
+          "$uid": {
+            ".read": "auth != null && (auth.uid === $uid || data.parent().parent().child('members').child(auth.uid).val() === true)",
+            ".write": "auth != null && ((auth.uid === $uid && data.val() === true && !newData.exists()) || (auth.uid === data.parent().parent().child('owner').val() && newData.val() === true))",
+            ".validate": "newData.val() === true && ($uid === newData.parent().parent().child('owner').val() || $uid === newData.parent().parent().child('partnerUid').val())"
+          }
+        },
+        "locations": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('pairs').child($pairId).child('members').child($uid).val() === true",
+            ".validate": "auth.uid === $uid && newData.hasChildren(['lat', 'lng', 'accuracy', 'updatedAt']) && newData.child('lat').isNumber() && newData.child('lat').val() >= -90 && newData.child('lat').val() <= 90 && newData.child('lng').isNumber() && newData.child('lng').val() >= -180 && newData.child('lng').val() <= 180 && newData.child('accuracy').isNumber() && newData.child('accuracy').val() >= 0 && newData.child('updatedAt').isNumber()",
+            "$other": { ".validate": "$other === 'lat' || $other === 'lng' || $other === 'accuracy' || $other === 'updatedAt'" }
+          }
+        },
+        "profiles": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('pairs').child($pairId).child('members').child($uid).val() === true",
+            ".validate": "auth.uid === $uid && newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 32"
+          }
+        },
+        "requests": {
+          "$uid": {
+            ".read": "auth != null && (auth.uid === $uid || auth.uid === root.child('pairs').child($pairId).child('owner').val())",
+            ".write": "auth != null && root.child('pairs').child($pairId).child('owner').exists() && ((auth.uid === $uid && ((!data.exists() && newData.isString() && newData.val().length <= 32) || (data.exists() && !newData.exists()))) || (auth.uid === root.child('pairs').child($pairId).child('owner').val() && data.exists() && !newData.exists()))",
+            ".validate": "newData.isString() && newData.val().length <= 32"
+          }
+        }
+      }
+    }
+  }
+}
