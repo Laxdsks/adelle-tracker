@@ -19,7 +19,7 @@ Perbesar peta untuk detail area, lalu ketuk tempat/bangunan. Tombol **3D** membu
 
 ## Foto jalan gratis (pilihan pengguna)
 
-APK 1.6.1 menyertakan Client Access Token aplikasi Dualworld yang diberikan pengguna. Di kedua HP cukup buka **Lapisan peta → Tampilan jalan**; tidak perlu akun/proyek baru atau menempel token lagi. Konfigurasi kosong yang tersimpan pada versi lama tidak menutupi konfigurasi bawaan. Langkah di bawah hanya untuk mengganti sumber atau membuat build sendiri.
+APK 1.6.2 menyertakan Client Access Token aplikasi Dualworld yang diberikan pengguna. Di kedua HP cukup buka **Lapisan peta → Tampilan jalan**; tidak perlu akun/proyek baru atau menempel token lagi. Konfigurasi kosong yang tersimpan pada versi lama tidak menutupi konfigurasi bawaan. Langkah di bawah hanya untuk mengganti sumber atau membuat build sendiri.
 
 1. Masuk/daftar sendiri di [Mapillary](https://www.mapillary.com/app/?login=true). Login tidak dapat diselesaikan atas nama Anda dari lingkungan ini.
 2. Buka [dashboard developer](https://www.mapillary.com/dashboard/developers), daftarkan aplikasi **Dualworld**, lalu dapatkan **Client Access Token** aplikasi. Jangan gunakan kata sandi, kunci admin, atau User Access Token.
