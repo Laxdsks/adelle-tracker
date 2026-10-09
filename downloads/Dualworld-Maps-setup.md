@@ -1,4 +1,4 @@
-# Peta, bangunan, dan foto jalan Dualworld 1.4.0
+# Peta, bangunan, dan foto jalan Dualworld 1.4.1
 
 Buka **Lapisan peta** (ikon tumpukan di sisi peta). Pilih Jalan, Satelit, atau Medan dan detail yang diperlukan. Panel, pencarian, rute, foto, 3D, dan panorama berada di Dualworld. Tautan sumber/lisensi dapat membuka situs penyedia saat Anda memilih kreditnya.
 
@@ -18,6 +18,8 @@ Buka **Lapisan peta** (ikon tumpukan di sisi peta). Pilih Jalan, Satelit, atau M
 Perbesar peta untuk detail area, lalu ketuk tempat/bangunan. Tombol **3D** membuka model; gunakan dua jari untuk mengubah sudut. Ketuk kartu Dill/Adelle lalu **Bangunan & foto** atau **Jalan 360°** untuk menjelajahi dekat posisi GPS. Foto dan citra adalah rekaman; tidak menggambarkan keadaan pasangan saat ini.
 
 ## Foto jalan gratis (pilihan pengguna)
+
+APK 1.4.1 sudah menyertakan Client Access Token aplikasi Dualworld yang diberikan pengguna. Di kedua HP cukup buka **Lapisan peta → Tampilan jalan**; tidak perlu akun/proyek baru atau menempel token lagi. Konfigurasi kosong yang tersimpan pada versi lama tidak menutupi konfigurasi bawaan. Langkah di bawah hanya untuk mengganti sumber atau membuat build sendiri.
 
 1. Masuk/daftar sendiri di [Mapillary](https://www.mapillary.com/app/?login=true). Login tidak dapat diselesaikan atas nama Anda dari lingkungan ini.
 2. Buka [dashboard developer](https://www.mapillary.com/dashboard/developers), daftarkan aplikasi **Dualworld**, lalu dapatkan **Client Access Token** aplikasi. Jangan gunakan kata sandi, kunci admin, atau User Access Token.
@@ -48,4 +50,6 @@ npm run android:build
 
 Library, CSS, dan lisensi dibundel; data/citra memerlukan internet. Service worker hanya menyimpan shell. `maps-config.json`, foto, ubin, API, lokasi, dan token tidak dimasukkan cache shell. Modul peta tidak mengirim kredensial Firebase ke penyedia peta.
 
-Token Mapillary/kunci Maps belum diberikan, sehingga foto jalan dan layanan Google dengan akun nyata belum dijalankan. Build ini belum diperiksa pada HP fisik; pengujian browser/pairing/rules tidak dijalankan untuk perubahan peta ini. Fitur tidak berarti semua data Google Maps disalin atau tersedia gratis.
+Pada 9 Oktober 2026, token klien publik diterima API Mapillary, metadata dan JPEG panorama asli berhasil diambil, dan panorama lokasi publik Singapura dirender dalam viewer Dualworld. Pemeriksaan browser menggunakan relay HTTPS dengan verifikasi sertifikat tetap aktif; Firebase produksi diblokir. Viewer ditutup dan canvas dibersihkan. Pencarian area Dompu/Woja yang diperiksa tidak menghasilkan foto; hasil kosong tidak dapat diperbaiki hanya dengan token. Cakupan dapat berubah dan pemeriksaan ini tidak membuktikan seluruh daerah tidak memiliki rekaman.
+
+Pengujian dua sesi dengan RTDB emulator dan aturan asli memeriksa gerakan koordinat pada kedua layar dan server, penolakan bacaan GPS kasar/lama, mode ikuti dan pemulihan pilihan berbagi. GPS serta autentikasi memakai fixture, bukan sensor HP fisik. Google Maps tidak diaktifkan atau diuji. Build ini belum diperiksa pada HP fisik; ketepatan jalan/rumah tidak dapat dijamin tanpa uji sensor di lokasi Anda.
