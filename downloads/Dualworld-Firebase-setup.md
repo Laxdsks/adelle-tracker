@@ -1,35 +1,31 @@
-# Mengaktifkan proyek Dualworld yang sudah ada
+# Dualworld 1.5 — profil banyak pengguna
 
-Proyek Anda: **dualworld-tracker**. Realtime Database sudah dibuat di Singapura.
+Proyek **dualworld-tracker** dan konfigurasi Web publik yang Anda berikan sudah dibundel dalam APK. Pengguna tidak perlu membuat proyek Firebase atau menyalin konfigurasi/kode ruang. Tidak perlu mengaktifkan billing Google Maps.
 
-URL database yang digunakan:
+## Satu tindakan untuk pemilik proyek
 
-```text
-https://dualworld-tracker-default-rtdb.asia-southeast1.firebasedatabase.app
-```
+Anonymous Authentication sebelumnya sudah aktif. Versi 1.5 menambahkan pencarian profil, permintaan koneksi, dan heartbeat online, sehingga **aturan Realtime Database perlu diperbarui satu kali**:
 
-Ekspor `dualworld-tracker-default-rtdb-export.json` berisi koordinat lama pada `tracker_data`. Ekspor data bukan konfigurasi aplikasi. Versi baru memakai ruang privat pada `pairs`; data lama tidak diubah atau dijadikan lokasi langsung.
+1. Buka [Realtime Database → Rules](https://console.firebase.google.com/project/dualworld-tracker/database/dualworld-tracker-default-rtdb/rules).
+2. Salin seluruh isi [aturan versi 1.5](https://raw.githubusercontent.com/Laxdsks/adelle-tracker/dualworld-android-download-20261008/downloads/dualworld-database.rules.json), menggantikan isi editor Rules, lalu tekan **Publish**. Berkas sumber yang sama: `database.rules.json`.
+3. Pasang APK baru di kedua HP **di atas aplikasi lama tanpa menghapus data**. Pilih nama/avatar saat diminta. Ruang dan izin berbagi yang tersimpan tetap digunakan.
 
-1. Buka [pengaturan proyek](https://console.firebase.google.com/project/dualworld-tracker/settings/general). Di **Your apps**, pilih aplikasi **Web** (ikon `</>`). Jika belum ada aplikasi Web, daftarkan dengan nama **Dualworld**. Hosting tidak perlu diaktifkan untuk APK.
-2. Pada **SDK setup and configuration**, pilih **Config**, lalu salin objek `firebaseConfig`. Konfigurasi yang diperlukan berisi `apiKey`, `projectId`, dan `appId`; tambahkan `databaseURL` di atas jika tidak muncul. Ini konfigurasi klien publik. Jangan memakai service-account atau private key.
-3. Buka **Authentication → Get started** jika belum aktif, lalu **Sign-in method / Sign-in providers → Anonymous → Enable → Save**.
-4. Buka [Realtime Database → Rules](https://console.firebase.google.com/project/dualworld-tracker/database/dualworld-tracker-default-rtdb/rules). Salin **seluruh isi `database.rules.json` dari versi baru ini** lalu tekan **Publish**. Aturan baru melindungi ruang dan lokasi, dan tidak memberi akses aplikasi baru ke `tracker_data` lama. Jangan menggunakan aturan yang mengizinkan semua orang membaca/menulis.
-5. Tempel konfigurasi pada **Koneksi dua perangkat** di satu HP, atau berikan konfigurasi Web publik itu kepada pengembang untuk dibundel di APK. Versi 1.3.0 menerima JSON maupun objek `const firebaseConfig = {...};` yang disalin dari Firebase Console. Untuk proyek `dualworld-tracker`, URL database di atas diisi otomatis jika tidak ada dalam konfigurasi yang Anda tempel.
-6. Pilih **Dill**, buat undangan, lalu tekan **Salin** atau **Bagikan**. HP pasangan memilih **Adelle**, membuka tautan `dualworld://join?...` atau menempel seluruh tautan/pesan WhatsApp di **Gabung ke ruang pasangan**, lalu menekan **Minta akses**. Setujui koneksi proyek jika diminta.
-7. Dill menekan **Terima** di daftar permintaan. Masing-masing menyalakan **Mulai berbagi** dan memberikan izin lokasi.
+Aturan sudah diuji pada emulator Firebase dengan pemeriksaan isolasi ruang, undangan, direktori terbatas, dan kepemilikan UID. Aturan tersebut belum diterbitkan otomatis ke proyek produksi karena lingkungan ini tidak memiliki sesi admin Firebase. Aturan lama tetap mendukung ruang lama; pencarian profil baru memerlukan Publish di atas. Jangan gunakan aturan `.read: true` atau `.write: true` di root.
 
-Hanya pembuat ruang perlu menyiapkan konfigurasi secara manual. Tautan membawa konfigurasi publik yang sama ke HP pasangan, dengan persetujuan sebelum menggunakannya. Kode ruang saja masih didukung jika kedua perangkat sudah menggunakan proyek yang sama. Matikan berbagi kapan saja untuk menghapus lokasi sendiri; di Android 1.3.0 berbagi tetap berjalan dengan notifikasi saat layar terkunci atau aplikasi ditutup. Aktifkan Lokasi akurat, notifikasi, dan izin sepanjang waktu jika ingin lanjut setelah reboot. HP yang mati tidak dapat mengirim posisi baru, tetapi posisi terakhir tetap ditampilkan beserta waktu pembaruannya.
+## Alur pengguna
 
-Pesan aplikasi menunjukkan prasyarat yang belum aktif: Anonymous perlu diaktifkan jika muncul pesan metode masuk; aturan perlu diterbitkan jika muncul akses database ditolak. Citra satelit memakai tingkat detail yang tersedia di wilayah tersebut dan memperbesarnya jika zoom lebih dekat tidak mempunyai citra.
+1. Buat nama tampilan dan pilih avatar; gender opsional hanya disimpan di perangkat. Izinkan pencarian jika ingin ditemukan teman. Izinkan berbagi lokasi untuk koneksi yang disetujui, lalu berikan izin Lokasi akurat dan notifikasi Android.
+2. Buka tombol **♡ Teman**, cari nama teman yang telah membuat profil, pilih profilnya, lalu kirim permintaan.
+3. Penerima membuka **♡ Teman → Terima** dan menyetujui koneksi. Berbagi dimulai sesuai izin pengguna. Tombol **Hentikan berbagi** tetap tersedia.
 
-Konfigurasi Web proyek telah dibundel ke APK 1.3.0 dan tetap disertakan pada 1.4.0. Pada 9 Oktober 2026, pemeriksaan langsung proyek ini lulus 26 pemeriksaan: Anonymous aktif, pembuat dapat membuat ruang, pihak luar ditolak, pasangan meminta akses dan disetujui, koordinat uji dibaca dua arah, data dihapus saat berhenti berbagi, serta akses terputus setelah keluar. Koordinat yang digunakan adalah data uji, dan ruang serta akun uji sudah dihapus. Perilaku GPS dan izin perangkat tetap perlu dicoba pada kedua HP.
+Banyak orang dapat menggunakan proyek yang sama; masing-masing ruang tetap privat untuk dua anggota yang disetujui. Saat ini satu profil memiliki satu koneksi aktif, bukan grup banyak anggota. Profil menggunakan identitas perangkat Firebase Anonymous, bukan login akun Google. Menghapus data aplikasi dapat kehilangan akses profil. Identitas lintas perangkat/akun Google adalah pekerjaan terpisah sebelum rilis publik.
 
-## Memperbarui dari 1.2.1
+## Lokasi dan status
 
-Pasang APK 1.3.0 di atas instalasi yang ada pada kedua HP; jangan hapus data aplikasi agar identitas dan ruang tetap tersimpan. Setelah pembaruan pertama, aktifkan Mulai berbagi sekali pada setiap HP dan setujui izin lokasi/notifikasi. Versi lama belum memiliki pilihan berbagi yang persisten. Tidak perlu membuat ulang proyek atau memasang ulang aturan Firebase. Tutup layar Dualworld atau kunci layar untuk penggunaan sehari-hari; gunakan Hentikan berbagi hanya saat memang ingin menghentikan dan menghapus posisi. Atur baterai Dualworld ke aktivitas latar diizinkan / tidak dibatasi jika HP menerapkan pembatasan tambahan.
+Bacaan GPS diminta tiap 1 detik dan publikasi bacaan baru dibatasi tiap 2 detik; sensor dan internet dapat lebih lambat. Hanya bacaan baru (maksimum umur 30 detik) dengan radius akurasi ≤35 m yang dibagikan. Filter menahan perubahan kecil dalam ketidakpastian GPS; dua bacaan yang konsisten atau kecepatan sensor dapat melepas pergerakan. Waktu yang ditampilkan berasal dari sensor, bukan heartbeat. Akurasi di rumah tetap bergantung sinyal GPS.
 
-## Pembaruan lokasi dan peta 1.4.1
+Status online dikirim terpisah sekitar tiap 20 detik. “Online · GPS … terakhir” berarti perangkat tersambung tetapi belum memperoleh pengukuran baru. Posisi tetap dapat dibuka atau dipakai sebagai tujuan, dengan waktu aslinya. HP mati tidak dapat mengirim posisi baru, tetapi posisi terakhir tetap tersimpan. Android memakai foreground service/notifikasi; izin latar dan batas baterai produsen dapat memengaruhi pemulihan setelah reboot. Web membutuhkan halaman aktif untuk pembaruan.
 
-Pasang APK 1.4.1 di atas versi yang ada pada **kedua HP**, tanpa menghapus data. Tanda tangan, profil, ruang, dan pilihan berbagi tetap digunakan. Tidak perlu proyek Firebase atau aturan baru. Konfigurasi Mapillary sudah dibundel; lihat **Dualworld-Maps-setup.md** / `MAPS_SETUP.md` untuk batas cakupan foto.
+## Penghapusan
 
-Nyalakan **Lokasi/GPS**, pilih izin **Lokasi akurat**, dan pastikan internet kedua HP aktif. Android meminta pembacaan GPS setiap 1 detik dan mengirim bacaan baru maksimal setiap 2 detik; sensor/koneksi dapat lebih lambat. Bacaan di atas radius ketidakpastian 35 m tidak dikirim. Coba dekat jendela atau di luar rumah jika menunggu GPS akurat. **Posisi** mengikuti pasangan, tombol bidik mengikuti diri sendiri; geser peta untuk berhenti mengikuti. Lingkaran menunjukkan ketidakpastian GPS, bukan batas bangunan. HP mati mempertahankan posisi terakhir dan waktu asli, tetapi tidak dapat mengirim pergerakan baru.
+**Hentikan berbagi** menghapus lokasi Anda ketika server dapat dihubungi. **Putuskan ruang bersama** mengakhiri koneksi. **Hapus profil dan data** menghapus profil publik, permintaan masuk, data ruang Anda dan identitas Firebase; internet diperlukan. `privacy.html` menjelaskan retensi dan penyedia layanan. Jangan memasukkan lokasi/token pribadi dalam laporan publik.

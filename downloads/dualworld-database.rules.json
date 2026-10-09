@@ -14,7 +14,7 @@
         "members": {
           "$uid": {
             ".read": "auth != null && (auth.uid === $uid || data.parent().parent().child('members').child(auth.uid).val() === true)",
-            ".write": "auth != null && ((auth.uid === $uid && data.val() === true && !newData.exists()) || (auth.uid === data.parent().parent().child('owner').val() && newData.val() === true))",
+            ".write": "auth != null && ((auth.uid === $uid && data.val() === true && !newData.exists()) || (auth.uid === data.parent().parent().child('owner').val() && newData.val() === true) || (auth.uid === $uid && newData.val() === true && data.parent().parent().child('partnerUid').val() === $uid && root.child('connectionInvites').child($uid).child(data.parent().parent().child('owner').val()).child('pairId').val() === $pairId && root.child('connectionInvites').child($uid).child(data.parent().parent().child('owner').val()).child('createdAt').val() > now - 604800000))",
             ".validate": "newData.val() === true && ($uid === newData.parent().parent().child('owner').val() || $uid === newData.parent().parent().child('partnerUid').val())"
           }
         },
@@ -22,7 +22,9 @@
           "$uid": {
             ".write": "auth != null && auth.uid === $uid && root.child('pairs').child($pairId).child('members').child($uid).val() === true",
             ".validate": "auth.uid === $uid && newData.hasChildren(['lat', 'lng', 'accuracy', 'updatedAt']) && newData.child('lat').isNumber() && newData.child('lat').val() >= -90 && newData.child('lat').val() <= 90 && newData.child('lng').isNumber() && newData.child('lng').val() >= -180 && newData.child('lng').val() <= 180 && newData.child('accuracy').isNumber() && newData.child('accuracy').val() >= 0 && newData.child('updatedAt').isNumber()",
-            "$other": { ".validate": "$other === 'lat' || $other === 'lng' || $other === 'accuracy' || $other === 'updatedAt'" }
+            "$other": {
+              ".validate": "$other === 'lat' || $other === 'lng' || $other === 'accuracy' || $other === 'updatedAt'"
+            }
           }
         },
         "profiles": {
@@ -37,7 +39,44 @@
             ".write": "auth != null && root.child('pairs').child($pairId).child('owner').exists() && ((auth.uid === $uid && ((!data.exists() && newData.isString() && newData.val().length <= 32) || (data.exists() && !newData.exists()))) || (auth.uid === root.child('pairs').child($pairId).child('owner').val() && data.exists() && !newData.exists()))",
             ".validate": "newData.isString() && newData.val().length <= 32"
           }
+        },
+        "presence": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('pairs').child($pairId).child('members').child($uid).val() === true",
+            ".validate": "newData.hasChildren(['sharing','phase','lastSeen']) && newData.child('sharing').val() === true && newData.child('phase').isString() && newData.child('phase').val().length <= 32 && newData.child('lastSeen').isNumber() && newData.child('lastSeen').val() <= now + 5000 && newData.child('lastSeen').val() >= now - 60000",
+            "$other": {
+              ".validate": "$other === 'sharing' || $other === 'phase' || $other === 'lastSeen'"
+            }
+          }
         }
+      }
+    },
+    "publicProfiles": {
+      ".indexOn": [
+        "searchName"
+      ],
+      ".read": "auth != null && query.orderByChild === 'searchName' && query.startAt != null && query.endAt === query.startAt + '' && query.limitToFirst != null && query.limitToFirst <= 12",
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name','searchName','avatar','handle']) && newData.child('name').isString() && newData.child('name').val().length >= 2 && newData.child('name').val().length <= 32 && newData.child('searchName').isString() && newData.child('searchName').val().length >= 2 && newData.child('searchName').val().length <= 64 && newData.child('avatar').isString() && newData.child('avatar').val().length <= 8 && newData.child('handle').isString() && newData.child('handle').val().length <= 40",
+        "$other": {
+          ".validate": "$other === 'name' || $other === 'searchName' || $other === 'avatar' || $other === 'handle'"
+        }
+      }
+    },
+    "connectionInvites": {
+      "$recipient": {
+        ".read": "auth != null && auth.uid === $recipient",
+        "$sender": {
+          ".read": "auth != null && (auth.uid === $recipient || auth.uid === $sender)",
+          ".write": "auth != null && ((auth.uid === $recipient && data.exists() && !newData.exists()) || (auth.uid === $sender && ((!newData.exists() && data.exists()) || (newData.exists() && root.child('publicProfiles').child($recipient).exists() && root.child('pairs').child(newData.child('pairId').val()).child('owner').val() === auth.uid && root.child('pairs').child(newData.child('pairId').val()).child('partnerUid').val() === $recipient && !root.child('pairs').child(newData.child('pairId').val()).child('members').child($recipient).exists()))))",
+          ".validate": "newData.hasChildren(['pairId','createdAt']) && newData.child('pairId').isString() && newData.child('pairId').val().length === 32 && newData.child('createdAt').isNumber() && newData.child('createdAt').val() <= now + 5000 && newData.child('createdAt').val() >= now - 60000",
+          "$other": {
+            ".validate": "$other === 'pairId' || $other === 'createdAt'"
+          }
+        },
+        ".write": "auth != null && auth.uid === $recipient && !newData.exists()"
       }
     }
   }
