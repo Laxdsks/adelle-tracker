@@ -1,24 +1,32 @@
-# Dualworld 1.5 — profil banyak pengguna
+# Dualworld 1.6 — pertemanan dan chat
 
 Proyek **dualworld-tracker** dan konfigurasi Web publik yang Anda berikan sudah dibundel dalam APK. Pengguna tidak perlu membuat proyek Firebase atau menyalin konfigurasi/kode ruang. Tidak perlu mengaktifkan billing Google Maps.
 
 ## Satu tindakan untuk pemilik proyek
 
-Anonymous Authentication sebelumnya sudah aktif. Versi 1.5 menambahkan pencarian profil, permintaan koneksi, dan heartbeat online, sehingga **aturan Realtime Database perlu diperbarui satu kali**:
+Anonymous Authentication sebelumnya sudah aktif. Versi 1.6 menambahkan teman permanen, izin lokasi per teman, chat pribadi/global dan lampiran, sehingga **aturan Realtime Database perlu diperbarui satu kali**:
 
 1. Buka [Realtime Database → Rules](https://console.firebase.google.com/project/dualworld-tracker/database/dualworld-tracker-default-rtdb/rules).
-2. Salin seluruh isi [aturan versi 1.5](https://raw.githubusercontent.com/Laxdsks/adelle-tracker/dualworld-android-download-20261008/downloads/dualworld-database.rules.json), menggantikan isi editor Rules, lalu tekan **Publish**. Berkas sumber yang sama: `database.rules.json`.
-3. Pasang APK baru di kedua HP **di atas aplikasi lama tanpa menghapus data**. Pilih nama/avatar saat diminta. Ruang dan izin berbagi yang tersimpan tetap digunakan.
+2. Salin seluruh isi [aturan versi 1.6](https://raw.githubusercontent.com/Laxdsks/adelle-tracker/dualworld-android-download-20261008/downloads/dualworld-database.rules.json), menggantikan isi editor Rules, lalu tekan **Publish**. Berkas sumber yang sama: `database.rules.json`.
+3. Pasang APK baru di kedua HP **di atas aplikasi lama tanpa menghapus data**. Pilih nama/avatar saat diminta. Koneksi lama yang disetujui dimigrasikan menjadi pertemanan; pilihan berbagi dipertahankan.
 
 Aturan sudah diuji pada emulator Firebase dengan pemeriksaan isolasi ruang, undangan, direktori terbatas, dan kepemilikan UID. Aturan tersebut belum diterbitkan otomatis ke proyek produksi karena lingkungan ini tidak memiliki sesi admin Firebase. Aturan lama tetap mendukung ruang lama; pencarian profil baru memerlukan Publish di atas. Jangan gunakan aturan `.read: true` atau `.write: true` di root.
 
 ## Alur pengguna
 
-1. Buat nama tampilan dan pilih avatar; gender opsional hanya disimpan di perangkat. Izinkan pencarian jika ingin ditemukan teman. Izinkan berbagi lokasi untuk koneksi yang disetujui, lalu berikan izin Lokasi akurat dan notifikasi Android.
-2. Buka tombol **♡ Teman**, cari nama teman yang telah membuat profil, pilih profilnya, lalu kirim permintaan.
-3. Penerima membuka **♡ Teman → Terima** dan menyetujui koneksi. Berbagi dimulai sesuai izin pengguna. Tombol **Hentikan berbagi** tetap tersedia.
+1. Buat nama dan avatar (gender opsional), kemudian izinkan GPS/notifikasi jika diinginkan.
+2. Buka **♡ Teman**, cari **nama atau ID `dw-…`**, lalu kirim permintaan. Nama/avatar bukan bukti identitas; pastikan penerima adalah orang yang Anda kenal.
+3. Penerima menekan **Terima**. Pertemanan tersimpan, tanpa otomatis memberikan lokasi kepada semua teman.
+4. Tekan **Bagikan lokasi** hanya pada teman yang boleh melihat posisi Anda. Teman lain tetap tidak dapat membacanya. Berhenti berbagi tidak menghapus teman; **Hapus teman** mencabut akses lokasi/chat. Daftar teman bertahan setelah aplikasi ditutup.
+5. Tekan **CHAT** pada teman untuk teks/emoji, foto/file (2 MiB) atau VN (60 detik). **Chat global** hanya teks/emoji. Mikrofon diminta saat VN digunakan, tidak ada telepon/video call.
 
-Banyak orang dapat menggunakan proyek yang sama; masing-masing ruang tetap privat untuk dua anggota yang disetujui. Saat ini satu profil memiliki satu koneksi aktif, bukan grup banyak anggota. Profil menggunakan identitas perangkat Firebase Anonymous, bukan login akun Google. Menghapus data aplikasi dapat kehilangan akses profil. Identitas lintas perangkat/akun Google adalah pekerjaan terpisah sebelum rilis publik.
+Profil memakai Firebase Anonymous yang disimpan pada instalasi, bukan login Google atau akun lintas perangkat. Jangan menghapus data APK ketika memperbarui. Pemulihan akun sebelum rilis publik masih diperlukan. Pengguna tidak perlu membuat proyek, token, TURN, atau memasukkan kode konfigurasi.
+
+## Penyimpanan, moderasi dan keamanan
+
+Aturan memisahkan teman, permintaan, per penerima lokasi, chat/media privat, serta laporan. Pengguna luar tidak memiliki akses chat/lokasi pribadi. Global dapat dibaca pengguna aplikasi yang masuk; hanya teks/emoji diterima. File disimpan terpisah di RTDB dan dimuat saat diketuk. Media lama tidak dibuka kembali oleh pertemanan baru setelah hubungan dihapus. Pemilik Firebase tetap memiliki akses administratif; chat bukan end-to-end encrypted.
+
+Laporan tersimpan di `reports/<uid>` untuk pemilik meninjau melalui Console. Tidak ada moderasi otomatis atau pemindaian file. Sebelum publikasi luas, siapkan moderasi operasional, perlindungan penyalahgunaan/App Check yang sesuai web dan Android, retensi/pembersihan pesan serta kuota media. Batas per pesan/identitas saja tidak mencegah orang membuat akun Anonymous baru. Pantau Usage pada Realtime Database; batas Spark tetap berlaku.
 
 ## Lokasi dan status
 
@@ -28,4 +36,4 @@ Status online dikirim terpisah sekitar tiap 20 detik. “Online · GPS … terak
 
 ## Penghapusan
 
-**Hentikan berbagi** menghapus lokasi Anda ketika server dapat dihubungi. **Putuskan ruang bersama** mengakhiri koneksi. **Hapus profil dan data** menghapus profil publik, permintaan masuk, data ruang Anda dan identitas Firebase; internet diperlukan. `privacy.html` menjelaskan retensi dan penyedia layanan. Jangan memasukkan lokasi/token pribadi dalam laporan publik.
+**Hentikan berbagi** menghapus lokasi Anda ketika server dapat dihubungi. **Hapus teman** mengakhiri akses lokasi/chat pertemanan itu. **Hapus profil dan data** menghapus profil publik, permintaan masuk/keluar, pertemanan/chat terkait, media dan pesan global sendiri, lokasi pribadi serta identitas Firebase; internet diperlukan. `privacy.html` menjelaskan retensi dan penyedia layanan. Jangan memasukkan lokasi/token pribadi dalam laporan publik.
