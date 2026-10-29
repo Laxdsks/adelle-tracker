@@ -1,6 +1,6 @@
-# KomikLingo 0.1.1 — pembaca terjemahan Android
+# KomikLingo 0.1.2 — pembaca terjemahan Android
 
-Aplikasi terpisah dari Dualworld. Buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
+Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
 ## Memakai APK
 
@@ -43,3 +43,27 @@ Teks kecil: cubit/perbesar situs, gambar atau halaman PDF sebelum diterjemahkan.
 Pengambilan gambar OCR memakai PixelCopy pada area pembaca di jendela aplikasi. Ini mengambil piksel WebView yang sudah dirender, termasuk gambar yang tampil lewat GPU, setelah lapisan terjemahan dibersihkan selama dua frame. Menggambar ulang WebView langsung ke Canvas tidak lagi dipakai. Kesalahan mengambil gambar dibedakan dari kegagalan mengenali huruf. Pembacaan otomatis dibersihkan saat aplikasi masuk latar/rotasi; callback gagal yang sudah kedaluwarsa juga melepas antrean agar pembaca tidak macet.
 
 Uji regresi Android tersedia di `app/src/captureTests`: `./gradlew -PcaptureTest connectedDebugAndroidTest` pada emulator x86_64. Fixture gambar dan activity uji hanya disertakan jika properti `captureTest` aktif; tidak masuk APK pengguna. Uji memeriksa OCR Latin asli pada gambar WebView dengan akselerasi grafis, pemotongan area header/footer dan perpindahan viewport setelah scroll. Itu tidak menilai kualitas model terjemahan atau perilaku semua situs.
+
+
+## Membuka situs lain dan gaya dialog (0.1.2)
+
+Tekan × pada kolom alamat lalu tempel URL, tekan Cari/tombol pencarian keyboard, atau pilih ⋮ → Cari komik / buka situs. Alamat tanpa skema otomatis memakai HTTPS. Bagikan tautan dari browser ke KomikLingo juga didukung; tidak ada daftar domain komik yang dikunci ke Kayn Scans. Situs dengan pembatasan WebView, login atau perlindungan akses tetap mengikuti aturannya sendiri.
+
+Gaya bawaan **Dialog akrab (aku–kamu)** menyesuaikan sapaan mode dasar. Pilihan **Netral (saya–kamu)** dan **Formal (saya–Anda)** tersedia di ⋮ → Gaya bahasa cerita. Pilihan disimpan per situs/cerita (pola path chapter/episode dikelompokkan), sehingga dua situs/cerita tidak otomatis berbagi pilihan. Sapaan hormat yang terlihat jelas seperti Sir/Your Majesty mempertahankan register formal di mode dasar. Ini preferensi gaya dengan aturan terbatas, bukan pendeteksian suami/istri atau pemahaman hubungan tokoh dari gambar.
+
+OCR membersihkan beberapa kesalahan terikat pola: kata penghubung menyatu dengan I sebelum verba, huruf akhir ganda pada kosakata umum tertentu, dan awalan F salah pada everyone/everything. Tidak ada penggantian kalimat komik secara hafalan. Nama seperti Andi dan seruan seperti nooo dipertahankan oleh uji regresi. Aturan tetap bisa salah pada nama/teks yang tidak lazim.
+
+Untuk 2–6 blok sampai 5.000 karakter, mode dasar mencoba menerjemahkan paragraf bersama. Hasil hanya dipakai bila jumlah paragraf cocok; bila tidak, tiap blok diterjemahkan ulang agar posisi/urutan tidak tercampur. Hasil menampilkan pasangan Inggris yang sudah dibersihkan dan Indonesia. Mengelompokkan paragraf serta menyesuaikan sapaan tidak menjadikan model dasar memahami seluruh cerita atau menjamin semua idiom benar.
+
+AI lokal opsional menerima gaya bahasa serta Catatan cerita (maksimum 800 karakter pada aplikasi), misalnya hubungan pasangan atau pilihan sapaan tokoh. Server membawa konteks beberapa dialog sebelumnya dan memisahkannya bila dokumen, gaya atau catatan berubah. AI belum otomatis aktif tanpa komputer/server yang disiapkan. Kualitas keluaran model asli tetap perlu dinilai pembaca.
+
+Pemeriksaan aturan: `bash tests/run.sh` dengan JDK17+. Tes server: `cd server && python3 -m unittest -v test_reader`. Uji UI Android dengan `-PcaptureTest` memakai halaman fixture dua domain HTTPS, bukan bukti akses seluruh situs nyata.
+
+
+## Pencarian DuckDuckGo (termasuk dalam 0.1.2)
+
+Kolom atas menerima **nama komik/kata kunci atau tautan**. Nama seperti “Chronicle of Runes komik” membuka pencarian DuckDuckGo; domain seperti `nama-situs.com/bab/1` langsung dibuka melalui HTTPS. Tekan Cari atau tombol pencarian keyboard. DuckDuckGo menjadi halaman awal untuk instalasi baru; instalasi lama tetap melanjutkan tautan terakhir. Pilihan menu Cari komik / buka situs menyediakan kolom kosong agar lebih mudah mengganti pencarian.
+
+Hasil pencarian ditampilkan sebagai situs DuckDuckGo di dalam WebView, dengan tautan hasil tetap di pembaca. Aplikasi tidak menggunakan API pencarian berbayar, tidak membuat indeks sendiri dan tidak menyediakan saran alamat secara native. Terjemahan otomatis ditahan pada halaman pencarian supaya tidak menutup tombol/hasil; setelah masuk situs komik, pembacaan otomatis melanjutkan pilihan sebelumnya. Tombol Terjemahkan manual tetap dapat digunakan pada hasil pencarian.
+
+Kata kunci dikirim ke DuckDuckGo sesuai tindakan pencarian pengguna. DuckDuckGo/situs tujuan dapat menampilkan verifikasi atau menolak WebView sesuai ketentuan mereka; aplikasi tidak melewati pembatasan itu. Pemeriksaan dari jaringan cloud menerima HTTP202 berjudul pencarian DuckDuckGo dengan elemen verifikasi, sehingga bukan bukti hasil pencarian langsung selalu tersedia di semua jaringan. Tes UI memakai halaman fixture untuk memeriksa alamat mesin, tampilan kata kunci dan pembukaan tautan di pembaca.
