@@ -1,4 +1,4 @@
-# KomikLingo 0.1.0 — pembaca terjemahan Android
+# KomikLingo 0.1.1 — pembaca terjemahan Android
 
 Aplikasi terpisah dari Dualworld. Buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
@@ -36,3 +36,10 @@ Pengujian server: `cd server && python3 -m unittest -v test_reader`. Tes integra
 Overlay menutup persegi teks hasil OCR dengan warna latar dominan, bukan mengembalikan lukisan di belakang huruf. Cocok terutama untuk balon warna polos. Efek suara, huruf lengkung, tulisan tangan, teks di tepi layar, font dekoratif dan latar bergambar bisa salah. Baca Hasil atau perbesar gambar bila perlu. Tidak ada pengenalan kamera/layar aplikasi lain; aplikasi membaca isi pembacanya sendiri.
 
 Teks kecil: cubit/perbesar situs, gambar atau halaman PDF sebelum diterjemahkan. OCR juga menerima tangkapan viewport yang diperbesar dengan batas memori. Pembesaran tidak dapat memulihkan huruf yang sudah pecah atau tidak memiliki detail. Gaya otomatis mempertahankan kapitalisasi dan memakai huruf tebal untuk sumber kapital, serta font yang mudah dibaca. Font artistik/kemiringan/bentuk huruf asli tidak disalin persis. Paket APK mendukung HP ARM64 dan ARMv7, bukan emulator x86.
+
+
+## Perbaikan 0.1.1
+
+Pengambilan gambar OCR memakai PixelCopy pada area pembaca di jendela aplikasi. Ini mengambil piksel WebView yang sudah dirender, termasuk gambar yang tampil lewat GPU, setelah lapisan terjemahan dibersihkan selama dua frame. Menggambar ulang WebView langsung ke Canvas tidak lagi dipakai. Kesalahan mengambil gambar dibedakan dari kegagalan mengenali huruf. Pembacaan otomatis dibersihkan saat aplikasi masuk latar/rotasi; callback gagal yang sudah kedaluwarsa juga melepas antrean agar pembaca tidak macet.
+
+Uji regresi Android tersedia di `app/src/captureTests`: `./gradlew -PcaptureTest connectedDebugAndroidTest` pada emulator x86_64. Fixture gambar dan activity uji hanya disertakan jika properti `captureTest` aktif; tidak masuk APK pengguna. Uji memeriksa OCR Latin asli pada gambar WebView dengan akselerasi grafis, pemotongan area header/footer dan perpindahan viewport setelah scroll. Itu tidak menilai kualitas model terjemahan atau perilaku semua situs.
