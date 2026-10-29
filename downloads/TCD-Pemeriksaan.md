@@ -1,36 +1,36 @@
-# Pemeriksaan TCD 0.1.7
+# Pemeriksaan TCD 0.1.8
 
-- `:app:assembleDebug :app:lintDebug` berhasil. APK pengguna: `com.komiklingo.app`, TCD, versionCode 8 / versionName 0.1.7, minSDK26 / targetSDK35, ARM64 dan ARMv7. APK pengguna tidak berisi activity/service fixture atau ABI x86.
-- `apksigner verify --verbose --print-certs` berhasil. SHA256 sertifikat tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1`, sama dengan APK sebelumnya. Dapat dipasang sebagai pembaruan tanpa sengaja mengganti paket/penyimpanan.
-- JVM: aturan teks, nama/istilah, TranslationFlow dan kualitas OCR lulus. Kasus tambahan memeriksa pemicu baca ulang 60/PO, konflik angka-kata GO/60, serta larangan koreksi global. Server Python: dua pengujian kontrak/autentikasi/isolasi konteks lulus, memakai Ollama tiruan.
+## Build dan identitas APK
 
-## Android: halaman, navigasi dan penangkapan
+- `:app:assembleDebug :app:lintDebug` lulus. Paket `com.komiklingo.app`, label TCD, versionCode 9 / versionName 0.1.8, minSDK26 / targetSDK35, ABI ARM64 dan ARMv7.
+- Tanda tangan diverifikasi dengan apksigner; sertifikat SHA256 tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1`, sama dengan versi sebelumnya. Bisa dipasang sebagai pembaruan. Manifest APK pengguna tidak memuat activity/service fixture. Keystore tidak disertakan dalam sumber.
+- JVM: ReaderRulesTest, NameRulesTest, TranslationFlowTest dan OcrQualityTest lulus. Model terjemahan, backend Python dan aturan bahasa tidak diganti; uji server tidak diulang karena tidak ada perubahan server.
 
-`validation/page-navigation-0.1.7.log`: **6 tes lulus** pada emulator Android 11 / API30 x86_64 dengan rendering perangkat lunak.
+## Pengujian Android
 
-- Pemindaian tiga bagian dalam satu dokumen melalui WebView/PixelCopy/OCR nyata mencapai teks pertama dan terakhir, tidak mengikuti tautan chapter berikutnya, kembali ke posisi awal dan menyimpan hasil di RAM.
-- Scroll dan zoom mempertahankan koordinat/gaya/hasil; kotak tumpang tindih tidak digandakan. Fragment URL tidak membersihkan dokumen yang sama. Refresh, next dan back membersihkan hasil; pembacaan halaman sebelumnya perlu diulang.
-- Beranda, Lanjutkan bacaan, riwayat bab, posisi gulir dan callback URL lama tetap berjalan.
-- Pengambilan piksel WebView berakselerasi grafis diuji pada viewport pertama dan sesudah scroll; area header/footer tidak ikut dibaca, view yang tidak terlihat ditolak.
+`validation/retained-native-0.1.8.log`: **9 tes lulus**, emulator Android 11/API30 x86_64, rendering perangkat lunak. APK uji terpisah dari APK ARM pengguna.
 
-Fixture halaman mengganti terjemahan ML Kit dengan keluaran deterministik; yang diuji nyata adalah browser, perpindahan viewport, OCR, koordinat dan siklus cache. Ini bukan pengukuran kualitas bahasa model terjemahan. Deteksi akhir halaman memakai ukuran/posisi DOM dokumen aktif. Situs dengan pembaca di scroll-container khusus, canvas/iframe, konten tanpa akhir atau pergeseran layout masih dapat membatasi pemindaian.
+1. Terjemahkan biasa pada dua paragraf WebView: hasil masuk cache dokumen tanpa menyalakan pemindaian 1 halaman. Hasil tetap ada sesudah scroll ke bawah/atas; kembali dan menekan Terjemahkan lagi tidak memanggil engine terjemahan ulang untuk viewport yang sudah selesai dibaca.
+2. Tombol Reset kecil benar-benar ada di bawah hasil. Reset membaca crop terpilih dan hanya mengirim paragraf itu ke engine, menampilkan hasil baru/Reset ✓; objek hasil paragraf lain tetap tidak berubah. Percobaan gagal mempertahankan hasil lama. Refresh, next dan back membersihkan cache dokumen.
+3. Cache memetakan posisi/ukuran pada zoom, memakai ulang ID saat kotak yang sama diperbarui dan tidak menumpuk kotak koreksi. Membersihkan hasil juga membersihkan coverage viewport.
+4. Gesture drag yang dimulai pada Reset diteruskan untuk scroll tanpa memicu klik Reset; area overlay yang bukan tombol tidak menangkap gesture bacaan.
+5. Uji piksel: kotak penutup tetangga yang tumpang tindih tidak menghapus ujung baris huruf yang sudah digambar. Sudut mask menutup latar sumber secara penuh. Penutup digambar dahulu, lalu semua teks, sehingga tidak ada penutup berikutnya yang menghapus teks hasil sebelumnya.
+6. Pemindaian satu dokumen masih mencapai bagian pertama dan terakhir, kembali ke posisi semula dan tidak membuka chapter berikutnya. Cache/coverage/gaya bertahan saat gulir/zoom; refresh/next/back membersihkannya.
+7. PixelCopy tetap membaca gambar WebView yang sudah dirender, sebelum/sesudah scroll, mengecualikan header/footer dan menolak view yang tidak terlihat.
+8. Tata huruf tetap mempertahankan warna, ukuran besar, jarak paragraf dan fallback Hasil untuk kotak yang tidak muat pada ukuran terbaca.
 
-## Android: huruf dan tata letak
+Satu tes melakukan beberapa pemeriksaan pada daftar di atas. OCR, PixelCopy, WebView, cache, tombol dan gesture memakai komponen Android nyata. Engine terjemahan fixture sengaja diganti keluaran deterministik untuk menghitung pemanggilan dan membandingkan hasil; ini **bukan** bukti akurasi bahasa model ML Kit. Screenshot `retained-preview-0.1.8.png` adalah halaman buatan dengan engine tiruan (kata FIRST/SECOND/UPDATED merupakan label pengujian), bukan contoh kualitas terjemahan komik. Uji awal 3 tes juga disimpan sebagai log historis siklus ini.
 
-Enam tes TypographyTest lulus pada siklus pembaruan ini, termasuk **OCR nyata GO! dan angka 60 pada gambar huruf miring tebal besar**: GO terbaca sebagai GO dan 60 tetap 60. Pembacaan normalisasi tidak boleh mengubah angka menjadi kata yang bentuknya mirip tanpa pengenal independen. Tes lain mencakup teks berwarna merah, penyambungan kata terpenggal, paragraf, susunan teks besar, batas keterbacaan dan pemilihan blok OCR yang lebih baik. Log `typography-and-initial-page-0.1.7.log` juga memuat kegagalan awal pemindaian halaman karena waktu emulator; setelah pembesaran viewport dibatasi 1,5×, pengujian halaman lulus pada `page-native-0.1.7.log` dan diulang bersama navigasi pada log enam tes final di atas.
+## Perilaku hasil dan Reset
 
-Estimasi warna/kemiringan berlangsung pada worker, bukan loop UI; tabel luminansi dan cache layout mengurangi pekerjaan ulang. Pembacaan ulang tetap dibatasi pada area meragukan. Hasil ini tidak menjamin semua font dekoratif, nama atau kalimat sudah benar; model dasar tetap ML Kit Inggris–Indonesia.
+- Mode biasa/otomatis menyimpan hasil dan koordinat CSS di RAM sampai refresh/navigasi/dokumen baru/proses dihentikan. Pengaturan gaya/nama/server yang diubah membersihkan hasil lama agar konfigurasi baru dipakai. Riwayat URL/posisi tetap terpisah; terjemahan tidak diarsipkan ke disk.
+- Wilayah viewport yang sudah dibaca selesai dicatat untuk menghindari OCR/terjemahan berulang saat kembali. Bagian baru dibaca bertahap. Batas cache 6.000 bagian; pencatatan viewport terbatas 800 wilayah.
+- Reset membaca crop layar pada blok/paragraf OCR yang dipilih dan menghapus cache engine sementara agar permintaan dikirim lagi. Penimpaan hasil berlaku jika seluruh bagian yang diproses ulang berhasil; jika gagal, hasil sebelumnya dipertahankan. Menggulir/navigasi membatalkan callback yang sudah tidak cocok dengan posisi/dokumennya.
+- Margin penutup sumber ditambah untuk huruf miring dan tepi glyph. Kotak yang hampir sama diganti, bukan ditumpuk. Semua mask digambar dahulu sebelum huruf. Footer Reset diletakkan di ruang yang tidak menutupi hasil lain; jika tidak muat, Reset bagian ini tersedia di panel Hasil. Tombol dapat diakses sebagai View Android, bukan hanya gambar pada Canvas.
+- Fitur balon aplikasi lain tetap lokal dengan izin MediaProjection; komponen layout hasil dipakai bersama. Percobaan regresi sesi balon tambahan tidak dapat diselesaikan: runner melaporkan `INSTRUMENTATION_ABORTED: System has crashed`, dan host emulator melaporkan `bad color buffer handle 223`. Buffer crash juga menunjukkan `audioserver`/audio Ranchu emulator mengalami `TimeCheck timeout for IAudioFlinger command 1`, lalu runner gagal melepas UiTestAutomationService dan proses telepon melaporkan DeadSystemException. Ini bukan hasil lulus untuk uji balon. Log disimpan terpisah dalam `floating-overlay-0.1.8.log`; perilaku balon 0.1.8 masih memerlukan verifikasi di perangkat. Sembilan tes fitur pembaca di atas selesai dan lulus sebelum kejadian ini.
 
-## Android: balon TCD
+## Batas praktis
 
-`validation/floating-0.1.7.log`: tes sesi MediaProjection **lulus**, meliputi persetujuan sistem Android, pembacaan layar activity dari paket/UID lain, OCR nyata, tampilan hasil, pelepasan bitmap saat Tutup, tangkap ulang setelah rotasi dan penghentian dari aksi notifikasi. Terjemahan pada fixture diganti keluaran deterministik; jalur produksi memakai ML Kit lokal dan tidak menggunakan server AI pembaca internal.
+Belum diuji pada HP fisik pengguna atau runtime Android14/15. Kecepatan emulator perangkat lunak bukan ukuran kecepatan HP. Model dasar tetap ML Kit Inggris–Indonesia; tidak ada janji terjemahan selalu benar, pemahaman cerita penuh atau koreksi sempurna semua font. Reset dapat menghasilkan kalimat yang sama. OCR/posisi masih bisa keliru pada sumber pecah, tulisan dekoratif, latar gambar atau layout yang bergeser setelah dimuat. Mask memakai warna latar dominan, bukan inpainting ilustrasi di balik teks. Bagian yang terlalu panjang tetap memakai Hasil agar tidak dipaksa terlalu kecil.
 
-Tes pembatalan persetujuan dan dekoder ImageReader RGBA juga lulus pada siklus ini; log awal lengkap tersedia di `floating-initial-0.1.7.log` (tes sesi penuh pada run awal gagal karena fixture peluncuran/keadaan SystemUI, lalu diperbaiki dan lulus terpisah). Dekoder memeriksa warna merah/biru dan dimensi agar padding baris tidak menjadi bagian gambar. Emulator perangkat lunak sempat memiliki dialog SystemUI ANR yang menutupi aplikasi uji. Untuk mengisolasi handler balon, gesture diberikan langsung ke View overlay nyata, sedangkan dialog persetujuan, ImageReader, OCR dan aplikasi sumber tetap nyata. Ini bukan pengujian end-to-end sentuhan fisik di HP pengguna.
-
-Tidak ada penyimpanan cuplikan/teks layar aplikasi lain ke disk atau pengiriman ke AI. Permukaan tangkap dilepas saat tidak diminta; sesi hanya dimulai melalui izin pengguna, tidak dipulihkan otomatis, dan berhenti saat layar dikunci. Manifest memakai overlay/foreground-media-projection/notifikasi, tanpa aksesibilitas, mikrofon atau kamera. Komponen izin/service tidak diekspor.
-
-## Batas dan artefak
-
-Belum diuji pada HP fisik pengguna atau runtime Android 14/15. Cabang API34/35 dibangun dan lint diperiksa, tetapi izin/layanan di versi tersebut masih perlu pengujian perangkat. Kecepatan pada emulator perangkat lunak bukan ukuran kecepatan HP; tidak ada klaim waktu terjemahan atau akurasi 100%. Mode 1 halaman lebih lama daripada satu layar dan tidak mengunduh chapter lain. Cache hanya untuk dokumen aktif, bukan penyimpanan terjemahan lintas navigasi. Foto dilindungi Android tidak dapat dibaca.
-
-APK utama, checksum, sumber dan panduan TCD disiapkan bersama alias KomikLingo yang byte-identik (sidecar checksum menyesuaikan nama file). Sumber tidak menyertakan keystore, local.properties, build, model terjemahan unduhan atau gambar komik pengguna. APK bertanda tangan pengembangan, bukan rilis Play Store.
+APK/panduan/sumber TCD dan alias KomikLingo diperbarui pada branch unduhan yang sama, tanpa perubahan main atau aplikasi Dualworld. APK tetap bertanda tangan pengembangan, bukan rilis Play Store.
