@@ -1,6 +1,6 @@
-# TCD 0.1.6 — pembaca terjemahan Android
+# TCD 0.1.7 — pembaca terjemahan Android
 
-Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
+Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Mode layar terlihat membersihkan overlay saat digulir; mode 1 halaman menyimpan hasil dan menampilkannya lagi pada posisi yang sama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
 ## Memakai APK
 
@@ -33,9 +33,9 @@ Pengujian server: `cd server && python3 -m unittest -v test_reader`. Tes integra
 
 ## Batas tampilan
 
-Overlay menutup persegi teks hasil OCR dengan warna latar dominan, bukan mengembalikan lukisan di belakang huruf. Cocok terutama untuk balon warna polos. Efek suara, huruf lengkung, tulisan tangan, teks di tepi layar, font dekoratif dan latar bergambar bisa salah. Baca Hasil atau perbesar gambar bila perlu. Tidak ada pengenalan kamera/layar aplikasi lain; aplikasi membaca isi pembacanya sendiri.
+Overlay menutup persegi teks hasil OCR dengan warna latar dominan, bukan mengembalikan lukisan di belakang huruf. Cocok terutama untuk balon warna polos. Efek suara, huruf lengkung, tulisan tangan, teks di tepi layar, font dekoratif dan latar bergambar bisa salah. Baca Hasil atau perbesar gambar bila perlu. Tidak ada kamera. Fitur opsional Balon TCD membaca layar aplikasi lain setelah izin Android dan ketukan pengguna.
 
-Teks kecil: cubit/perbesar situs, gambar atau halaman PDF sebelum diterjemahkan. OCR juga menerima tangkapan viewport yang diperbesar dengan batas memori. Pembesaran tidak dapat memulihkan huruf yang sudah pecah atau tidak memiliki detail. Gaya otomatis mempertahankan kapitalisasi dan memakai huruf tebal untuk sumber kapital, serta font yang mudah dibaca. Font artistik/kemiringan/bentuk huruf asli tidak disalin persis. Paket APK mendukung HP ARM64 dan ARMv7, bukan emulator x86.
+Teks kecil: cubit/perbesar situs, gambar atau halaman PDF sebelum diterjemahkan. OCR juga menerima tangkapan viewport dengan pembesaran terbatas 1,5× dan batas memori. Area sulit dapat dibesarkan/dinormalisasi secara terpisah. Pembesaran tidak dapat memulihkan huruf yang sudah pecah atau tidak memiliki detail. Gaya otomatis mempertahankan kapitalisasi dan memakai huruf tebal untuk sumber kapital, serta font yang mudah dibaca. Kemiringan, warna dominan, kapitalisasi dan ukuran diperkirakan dari gambar. Font artistik/bentuk huruf asli tidak disalin persis. Paket APK mendukung HP ARM64 dan ARMv7, bukan emulator x86.
 
 
 ## Perbaikan 0.1.1
@@ -121,3 +121,16 @@ Awalan gagap yang jelas diterjemahkan sebagai bagian dari kalimat utuh lalu dike
 Aplikasi kini bernama **TCD** (sebelumnya KomikLingo), dengan ikon balon percakapan komik berisi TCD. Ikon adaptif memakai latar navy, balon putih/tulisan gelap dan aksen hijau, dengan ruang untuk mask launcher Android. Nama pada launcher, tombol Beranda, menu, panduan berbagi dan APK telah disesuaikan. Identitas paket `com.komiklingo.app` dan sertifikat sengaja dipertahankan untuk pembaruan di atas APK lama; riwayat, pengaturan dan model tetap berada pada aplikasi yang sama.
 
 APK utama: `dist/TCD-Android.apk`; sumber: `dist/TCD-Source.zip`. Tautan artefak lama KomikLingo pada branch unduhan diperbarui sebagai alias. Gambar ikon asli hasil generasi disertakan sebagai resource `app/src/main/res/drawable-nodpi/tcd_balloon.png`.
+
+
+## Halaman aktif dan balon aplikasi lain (0.1.7)
+
+**1 halaman:** buka satu halaman komik di pembaca TCD, tekan **1 halaman**, lalu tunggu pemindaian otomatis dari atas sampai bawah selesai. Ini hanya halaman/chapter yang sedang dibuka, tidak membuka chapter berikutnya atau seluruh seri. Aplikasi menggulir dengan area tumpang tindih, menunggu gambar terlihat dimuat (maksimal 7 detik per layar), lalu kembali ke posisi awal. Bilah kemajuan menyediakan Berhenti; menyentuh halaman juga menghentikan pemindaian. Jangan menavigasi/menggulir selama pemindaian jika ingin menyelesaikannya.
+
+Hasil dan koordinatnya berada **di RAM untuk dokumen aktif saja**: menggulir atau memperbesar menampilkan kembali terjemahan yang telah dibaca; refresh, pindah halaman, next/back chapter membersihkannya dan halaman perlu diterjemahkan ulang. Hasil tidak menjadi arsip terjemahan offline. Riwayat judul/URL/posisi bacaan tetap fitur terpisah. Hasil sebagian tetap tersedia jika pemindaian dihentikan. Batas pengaman 400 viewport atau 6.000 bagian; halaman tanpa akhir, gambar gagal dimuat, canvas/iframe khusus atau perubahan tata letak setelah scan dapat menyebabkan bagian terlewat/tidak tepat. Satu blok sangat panjang diproses per baris yang terlihat. Kotak yang tidak muat tetap menyediakan Hasil, bukan teks terlalu kecil.
+
+**Balon TCD:** Beranda → Balon TCD → Mulai. Izinkan tampil di atas aplikasi lain dan tangkap layar Android. Notifikasi ditawarkan pada Android 13+. Buka browser/aplikasi lain lalu ketuk balon yang dapat digeser. Hasil adalah cuplikan statis: Tutup untuk kembali menggulir, lalu ketuk lagi. Tahan balon untuk menu atau Hentikan dari notifikasi. Balon berhenti ketika layar dikunci; untuk sesi baru, buka TCD dan berikan izin layar lagi. Tidak memerlukan aksesibilitas, kamera, mikrofon atau login.
+
+Cuplikan dari aplikasi lain hanya diproses oleh OCR dan terjemahan **di HP**, meski server AI pembaca internal pernah diatur. Tidak direkam terus-menerus, tidak disimpan ke disk, tidak dikirim ke server AI, dan dilepas saat hasil ditutup/sesi dihentikan. Teks hasil terakhir hanya di RAM sampai sesi dihentikan. Isi pribadi yang terlihat bisa ikut terbaca; gunakan pada layar yang ingin diterjemahkan. Layar yang dilindungi Android (misalnya sebagian aplikasi bank/DRM) tidak dapat diterjemahkan. Fitur 1 halaman penuh tersedia di pembaca internal, sedangkan balon hanya membaca layar yang terlihat setiap kali diketuk.
+
+Pembacaan ulang terbatas pada area meragukan, termasuk PO/DO dan GO/60; tidak ada penggantian global angka 60 menjadi GO. Pergantian angka menjadi kata yang bentuknya mirip memerlukan pembacaan OCR independen sebelum diterima, dengan pemeriksaan kualitas dan nama. Angka asli tetap perlu dipertahankan. Salah OCR masih mungkin; gunakan Lihat asli/Hasil untuk membandingkan. Sampling warna/kemiringan berjalan di worker, tabel luminansi dipakai ulang dan layout hasil dicache agar scrolling tidak melakukan OCR/penataan ulang berulang. Waktu pemindaian seluruh halaman bergantung panjang halaman, gambar, HP dan model; bukan proses seketika. Belum ada angka kecepatan pada HP pengguna.
