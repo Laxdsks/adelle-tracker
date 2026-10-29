@@ -1,4 +1,4 @@
-# KomikLingo 0.1.4 — pembaca terjemahan Android
+# KomikLingo 0.1.5 — pembaca terjemahan Android
 
 Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
@@ -99,3 +99,18 @@ Teks yang menyentuh tepi atas/bawah layar tidak dipaksakan menjadi kalimat lengk
 Ukuran huruf mengikuti tinggi tulisan sumber dan ruang hasil OCR, dengan batas 38 piksel lama dihapus. Teks besar menjaga penekanannya, teks panjang mengecil sebatas ukuran yang masih terbaca. Jika tidak muat pada batas itu, sumber dibiarkan terlihat dengan penanda “Hasil ↗”; baca terjemahan lengkap lewat tombol Hasil. Teks tidak dipaksa menjadi ukuran 5 piksel. Penyelarasan tengah/kiri diperkirakan dari posisi baris sumber. Jarak antarbaris 1,12 dan jarak paragraf tambahan disesuaikan dengan ukuran huruf. Panel Hasil menyediakan teks yang bisa dipilih, ukuran lebih nyaman dan jarak antardialog.
 
 Layout dihitung saat hasil berubah, disimpan dan dipakai ulang saat menggambar, sehingga gulir tidak menghitung ulang seluruh susunan teks pada tiap frame. Pemindaian kontras, sampling warna dan model terjemahan tetap memakai sumber daya HP; performa belum diukur di perangkat pengguna.
+
+
+## Beranda, bab terakhir dan huruf kapital miring (0.1.5)
+
+Saat peluncuran baru, aplikasi menampilkan **Beranda**: kolom pencarian/tautan, **Lanjutkan bacaan**, dan **Riwayat bab**. Ketuk judul aplikasi bertanda ⌂ atau pilih ⋮ → Beranda untuk kembali dari pembaca. Tautan baru yang dibagikan ke aplikasi langsung dibuka dan diprioritaskan. Tautan berbagi yang telah dipakai tidak disimpan sebagai perintah untuk diulang pada peluncuran berikutnya. Kembali melalui daftar aplikasi Android dapat melanjutkan activity yang memang masih terbuka.
+
+Riwayat menyimpan maksimal 30 halaman web: judul, URL, waktu kunjungan dan posisi gulir. Pencarian DuckDuckGo dan file pribadi tidak masuk daftar bab. Bab lama yang menyimpan posisi belakangan tidak mengalahkan waktu kunjungan bab yang lebih baru. Callback halaman lama juga tidak boleh menimpa URL halaman aktif. Pilih Lanjutkan atau bab di riwayat untuk kembali ke tautan dan posisi yang tersimpan. Situs dengan gambar yang dimuat terlambat atau tata letak yang berubah dapat membuat posisi gulir belum tepat; ini bukan pengunduhan bab offline. Pilihan nama/gaya per cerita tetap tersimpan terpisah.
+
+Huruf kapital miring/besar dibaca ulang pada **area teks yang sulit** dengan ukuran huruf dinormalisasi, lalu dengan pelurusan kemiringan dan pembesaran terkontrol. Maksimal dua area dan dua percobaan per area, berurutan. Jika maksimal dua baris masih meragukan, pembaca Tesseract LSTM English yang terpisah mencoba baris itu di HP. Model cadangan dibundel dan disalin ke ruang privat aplikasi saat dipakai; tidak memerlukan akun/API atau unduhan model OCR tambahan. Jika tidak ada area dikenali, percobaan kontras tetap tersedia. Koordinat hasil dikembalikan ke gambar asli supaya posisi, warna dan ukuran overlay tidak ikut bergeser. Semua percobaan tambahan sementara di memori HP.
+
+Tesseract memakai model `tessdata_fast` English (~4 MB), bukan layanan terjemahan. Tambahan ukuran paket dan ruang model lokal diperlukan. Kedua pengenal tetap bisa salah; hasil cadangan hanya dipakai jika lolos pemeriksaan kualitas, geometri dan nama. Pembanding kosakata CMUdict lokal membantu menilai hasil OCR bersama confidence pengenal. Campuran huruf/angka yang mencurigakan juga memicu pembacaan ulang. **Tidak ada penggantian global** “50ML” menjadi “SOUL” atau perubahan semua kata asing menjadi kata kamus. Angka, ukuran, nama fantasi dan font tidak lazim tetap dapat ambigu. Nama yang sudah dikenal diperiksa agar tidak hilang saat hasil area diganti. Kualitas skor dan kamus bukan jaminan kata yang dipilih selalu benar.
+
+Perbaikan diuji pada potongan panel contoh pengguna dari sumber publik: LAUGH, DIRECTLY dan SOUL berhasil dikenali melalui jalur pembacaan baru. Panel berhak cipta itu tidak dimasukkan ke APK atau arsip sumber. Tes opsional CapsOcrTest memakai file uji privat `files/ocr-panel.png` di data aplikasi debug; tanpa file itu tes dilewati. Uji ini bukan bukti semua teks kapital pada semua komik sudah benar.
+
+Awalan gagap yang jelas diterjemahkan sebagai bagian dari kalimat utuh lalu dikembalikan mengikuti huruf awal kata Indonesia, sehingga tidak menyalin awalan salah seperti P-JANGAN. Nama yang dipertahankan tidak diubah ejaannya. Mode dasar tetap memakai ML Kit gratis, belum memahami seluruh cerita, dan dapat salah menerjemahkan meski OCR lebih baik.
