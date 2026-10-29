@@ -1,0 +1,11 @@
+# Pemeriksaan TCD 0.1.6
+
+- assembleDebug dan lintDebug berhasil. application-label dari APK adalah TCD; versionCode7/versionName0.1.6, paket com.komiklingo.app, Android 8+ (minSDK26/targetSDK35), ARM64/ARMv7.
+- apksigner memverifikasi tanda tangan. SHA256 sertifikat tetap bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1, sama dengan APK KomikLingo sebelumnya. Nama paket/penyimpanan tidak diganti; perubahan ini dapat dipasang sebagai pembaruan.
+- Nama launcher/pemasangan, judul Beranda/menu/panduan berbagi di aplikasi memakai TCD. Resource app_name/home_brand/home_description dipakai bersama; matcher label pada tes HomeHistory disesuaikan.
+- Ikon baru berupa balon percakapan berisi TCD, dibuat sesuai permintaan pengguna. PNG RGBA asli disimpan di drawable-nodpi/tcd_balloon.png. Ikon adaptif API26+ memiliki latar navy dan inset 6%; roundIcon mengacu resource adaptif yang sama. Artwork pekat diperiksa secara geometris: radius maksimum sekitar 35,53dp di dalam lingkaran aman 36dp pada viewport 108dp. Gambar asli juga diperiksa visual untuk tulisan TCD dan bentuk balon.
+- aapt menemukan application-icon mipmap-anydpi-v26/ic_launcher.xml pada semua density. Manifest/ABI APK akhir diperiksa; fixture uji tidak masuk APK pengguna, dan tidak ada pustaka x86.
+- Tidak ada tes fungsional baru untuk perubahan nama/ikon ini; uji OCR/navigasi tidak diulang. Hasil 9 uji Android serta JVM/server versi 0.1.5 disimpan sebagai bukti historis di validation/functional-0.1.5.md dan log terkait. Screenshot Beranda lama merupakan fixture versi 0.1.5, bukan tampilan branding terbaru.
+- APK utama TCD-Android.apk serta checksum, panduan dan sumber disiapkan. Nama artefak KomikLingo lama diperbarui sebagai alias byte-identik untuk tautan branch sebelumnya. ZIP sumber tidak menyertakan keystore, build, local.properties atau gambar bab.
+
+Batas: belum diperiksa langsung pada HP/seluruh launcher pengguna. Pemeriksaan nama/icon didasarkan pada build, metadata resource, visual aset dan geometri ruang aman ikon. Model/fungsi OCR dan terjemahan tidak diubah pada 0.1.6, sehingga batas pembacaan font dan pemahaman cerita dari 0.1.5 tetap berlaku. APK masih menggunakan tanda tangan pengembangan dan bukan rilis Play Store.

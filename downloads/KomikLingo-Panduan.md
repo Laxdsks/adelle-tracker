@@ -1,10 +1,10 @@
-# KomikLingo 0.1.5 — pembaca terjemahan Android
+# TCD 0.1.6 — pembaca terjemahan Android
 
 Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
 ## Memakai APK
 
-Pasang `dist/KomikLingo-Android.apk` pada Android 8+. Unduh model Inggris–Indonesia sekali melalui internet (menu ⋮ → Unduh model). OCR Latin sudah dibundel; file dapat diterjemahkan tanpa internet setelah model tersedia. Situs komik tetap membutuhkan internet. File: JPG/PNG/WebP, PDF tanpa kata sandi dan TXT UTF-8. EPUB/DOCX/CBZ belum didukung.
+Pasang `dist/TCD-Android.apk` pada Android 8+. Unduh model Inggris–Indonesia sekali melalui internet (menu ⋮ → Unduh model). OCR Latin sudah dibundel; file dapat diterjemahkan tanpa internet setelah model tersedia. Situs komik tetap membutuhkan internet. File: JPG/PNG/WebP, PDF tanpa kata sandi dan TXT UTF-8. EPUB/DOCX/CBZ belum didukung.
 
 Tautan contoh Kayn Scans telah merespons HTTP 200 saat diperiksa; itu tidak membuktikan pembaca WebView akan selalu diizinkan oleh situs. Pemeriksaan/iklan/login situs tetap berlaku. Jika gambar belum muncul, tunggu lalu gulir sedikit atau tekan Terjemahkan. Aplikasi tidak melewati pembatasan akses situs.
 
@@ -47,7 +47,7 @@ Uji regresi Android tersedia di `app/src/captureTests`: `./gradlew -PcaptureTest
 
 ## Membuka situs lain dan gaya dialog (0.1.2)
 
-Tekan × pada kolom alamat lalu tempel URL, tekan Cari/tombol pencarian keyboard, atau pilih ⋮ → Cari komik / buka situs. Alamat tanpa skema otomatis memakai HTTPS. Bagikan tautan dari browser ke KomikLingo juga didukung; tidak ada daftar domain komik yang dikunci ke Kayn Scans. Situs dengan pembatasan WebView, login atau perlindungan akses tetap mengikuti aturannya sendiri.
+Tekan × pada kolom alamat lalu tempel URL, tekan Cari/tombol pencarian keyboard, atau pilih ⋮ → Cari komik / buka situs. Alamat tanpa skema otomatis memakai HTTPS. Bagikan tautan dari browser ke TCD juga didukung; tidak ada daftar domain komik yang dikunci ke Kayn Scans. Situs dengan pembatasan WebView, login atau perlindungan akses tetap mengikuti aturannya sendiri.
 
 Gaya bawaan **Dialog akrab (aku–kamu)** menyesuaikan sapaan mode dasar. Pilihan **Netral (saya–kamu)** dan **Formal (saya–Anda)** tersedia di ⋮ → Gaya bahasa cerita. Pilihan disimpan per situs/cerita (pola path chapter/episode dikelompokkan), sehingga dua situs/cerita tidak otomatis berbagi pilihan. Sapaan hormat yang terlihat jelas seperti Sir/Your Majesty mempertahankan register formal di mode dasar. Ini preferensi gaya dengan aturan terbatas, bukan pendeteksian suami/istri atau pemahaman hubungan tokoh dari gambar.
 
@@ -114,3 +114,10 @@ Tesseract memakai model `tessdata_fast` English (~4 MB), bukan layanan terjemaha
 Perbaikan diuji pada potongan panel contoh pengguna dari sumber publik: LAUGH, DIRECTLY dan SOUL berhasil dikenali melalui jalur pembacaan baru. Panel berhak cipta itu tidak dimasukkan ke APK atau arsip sumber. Tes opsional CapsOcrTest memakai file uji privat `files/ocr-panel.png` di data aplikasi debug; tanpa file itu tes dilewati. Uji ini bukan bukti semua teks kapital pada semua komik sudah benar.
 
 Awalan gagap yang jelas diterjemahkan sebagai bagian dari kalimat utuh lalu dikembalikan mengikuti huruf awal kata Indonesia, sehingga tidak menyalin awalan salah seperti P-JANGAN. Nama yang dipertahankan tidak diubah ejaannya. Mode dasar tetap memakai ML Kit gratis, belum memahami seluruh cerita, dan dapat salah menerjemahkan meski OCR lebih baik.
+
+
+## Nama dan ikon (0.1.6)
+
+Aplikasi kini bernama **TCD** (sebelumnya KomikLingo), dengan ikon balon percakapan komik berisi TCD. Ikon adaptif memakai latar navy, balon putih/tulisan gelap dan aksen hijau, dengan ruang untuk mask launcher Android. Nama pada launcher, tombol Beranda, menu, panduan berbagi dan APK telah disesuaikan. Identitas paket `com.komiklingo.app` dan sertifikat sengaja dipertahankan untuk pembaruan di atas APK lama; riwayat, pengaturan dan model tetap berada pada aplikasi yang sama.
+
+APK utama: `dist/TCD-Android.apk`; sumber: `dist/TCD-Source.zip`. Tautan artefak lama KomikLingo pada branch unduhan diperbarui sebagai alias. Gambar ikon asli hasil generasi disertakan sebagai resource `app/src/main/res/drawable-nodpi/tcd_balloon.png`.
