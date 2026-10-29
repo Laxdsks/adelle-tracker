@@ -1,4 +1,4 @@
-# KomikLingo 0.1.2 — pembaca terjemahan Android
+# KomikLingo 0.1.3 — pembaca terjemahan Android
 
 Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
@@ -67,3 +67,16 @@ Kolom atas menerima **nama komik/kata kunci atau tautan**. Nama seperti “Chron
 Hasil pencarian ditampilkan sebagai situs DuckDuckGo di dalam WebView, dengan tautan hasil tetap di pembaca. Aplikasi tidak menggunakan API pencarian berbayar, tidak membuat indeks sendiri dan tidak menyediakan saran alamat secara native. Terjemahan otomatis ditahan pada halaman pencarian supaya tidak menutup tombol/hasil; setelah masuk situs komik, pembacaan otomatis melanjutkan pilihan sebelumnya. Tombol Terjemahkan manual tetap dapat digunakan pada hasil pencarian.
 
 Kata kunci dikirim ke DuckDuckGo sesuai tindakan pencarian pengguna. DuckDuckGo/situs tujuan dapat menampilkan verifikasi atau menolak WebView sesuai ketentuan mereka; aplikasi tidak melewati pembatasan itu. Pemeriksaan dari jaringan cloud menerima HTTP202 berjudul pencarian DuckDuckGo dengan elemen verifikasi, sehingga bukan bukti hasil pencarian langsung selalu tersedia di semua jaringan. Tes UI memakai halaman fixture untuk memeriksa alamat mesin, tampilan kata kunci dan pembukaan tautan di pembaca.
+
+
+## Nama tokoh, tempat dan barang khusus (0.1.3)
+
+Nama yang sudah dikenali/didaftarkan dikunci **sebelum** OCR dibersihkan dan teks dikirim ke mesin terjemahan. Hasil diperiksa sebelum ditampilkan dan nama dipasang kembali sesudah penyesuaian aku–kamu. Bila mode dasar mengubah penanda, aplikasi mencoba menerjemahkan hanya bagian di luar nama. Bila terjemahan tetap gagal, teks asli dibiarkan terlihat; aplikasi tidak menebak penggantian dari kata Indonesia seperti “larangan”.
+
+Nama **Ban** dan judul **Chronicle of Runes** sudah disiapkan khusus untuk cerita contoh pada Kayn Scans. Ban tidak dimasukkan sebagai nama untuk semua komik. Saat ganti judul/situs, daftar terpisah dipakai dan pengenalan baru berjalan otomatis. Bab dengan path chapter/episode dan awalan cerita yang sama berbagi daftar. Situs dengan identitas cerita tidak jelas memakai path/query lengkap agar daftar tidak bercampur; dua mirror/domain tidak otomatis digabung. File lokal memakai identitas masing-masing file, sedangkan halaman satu PDF berbagi daftar.
+
+Pengenalan gratis di HP memakai petunjuk terbatas: sapaan seperti “Luna, are you okay?”, “Hey Akira!”, perkenalan “My name is Luna”, serta nama tempat/barang yang disebut jelas sebagai named/called. Huruf kapital semua saja **bukan** bukti sebuah kata adalah nama. Ini bukan NER/AI yang memahami seluruh cerita, jadi nama baru/ambigu bisa luput dan deteksi bisa keliru. Mode AI opsional tetap memerlukan komputer sendiri; hasilnya juga diperiksa untuk menjaga nama yang sudah masuk daftar.
+
+Koreksi lewat **⋮ → Nama & istilah tetap**. Isi satu nama per baris, misalnya nama tokoh, kota, atau pedang khusus. Ejaan disimpan per cerita, mendukung nama beberapa kata, apostrof/tanda hubung dan huruf Unicode; maksimum 80 istilah, masing-masing 64 karakter. Pencocokan memakai batas kata dan tidak peka huruf besar/kecil; istilah terpanjang didahulukan. Jika suatu kata sekaligus nama dan kata umum (misalnya Ban), semua kecocokan kata itu dalam cerita akan mengikuti daftar. Bila itu tidak cocok, hapus/koreksi entri. Nama yang dihapus tidak ditambahkan otomatis lagi pada cerita itu; bisa ditambahkan manual kembali. Pengenalan otomatis bisa dimatikan. Pengaturan tetap tersimpan saat aplikasi ditutup/diperbarui.
+
+Server AI sumber diperbarui untuk menerima pemetaan nama, menjaga penanda persis sekali per blok dan menolak hasil dengan nama hilang/berulang. Riwayat konteks memakai nama asli yang dipulihkan, bukan penanda yang bisa dipakai ulang untuk nama lain. Jika memakai AI, perbarui juga `server/reader_server.py` di komputer. Nama/daftar yang cocok ikut dikirim hanya ke server AI pilihan pengguna; mode dasar tetap di HP.
