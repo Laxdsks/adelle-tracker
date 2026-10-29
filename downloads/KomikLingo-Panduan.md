@@ -1,4 +1,4 @@
-# KomikLingo 0.1.3 — pembaca terjemahan Android
+# KomikLingo 0.1.4 — pembaca terjemahan Android
 
 Aplikasi terpisah dari Dualworld. Cari judul lewat DuckDuckGo, buka tautan komik/novel HTTPS atau pilih gambar, PDF dan TXT. Mode otomatis aktif saat awal: setelah gulir berhenti ±1 detik, aplikasi mengenali teks yang terlihat dan menampilkan Indonesia di area teks. Menggulir membersihkan overlay lama. `Lihat asli` membandingkan gambar asli; `Hasil` membuka terjemahan penuh. Ukuran font menyesuaikan kotak OCR; kotak yang terlalu kecil mengarahkan ke Hasil. File asli tidak ditulis ulang.
 
@@ -53,7 +53,7 @@ Gaya bawaan **Dialog akrab (aku–kamu)** menyesuaikan sapaan mode dasar. Piliha
 
 OCR membersihkan beberapa kesalahan terikat pola: kata penghubung menyatu dengan I sebelum verba, huruf akhir ganda pada kosakata umum tertentu, dan awalan F salah pada everyone/everything. Tidak ada penggantian kalimat komik secara hafalan. Nama seperti Andi dan seruan seperti nooo dipertahankan oleh uji regresi. Aturan tetap bisa salah pada nama/teks yang tidak lazim.
 
-Untuk 2–6 blok sampai 5.000 karakter, mode dasar mencoba menerjemahkan paragraf bersama. Hasil hanya dipakai bila jumlah paragraf cocok; bila tidak, tiap blok diterjemahkan ulang agar posisi/urutan tidak tercampur. Hasil menampilkan pasangan Inggris yang sudah dibersihkan dan Indonesia. Mengelompokkan paragraf serta menyesuaikan sapaan tidak menjadikan model dasar memahami seluruh cerita atau menjamin semua idiom benar.
+Pada versi 0.1.2, untuk 2–6 blok sampai 5.000 karakter, mode dasar mencoba menerjemahkan paragraf bersama. Hasil hanya dipakai bila jumlah paragraf cocok; bila tidak, tiap blok diterjemahkan ulang agar posisi/urutan tidak tercampur. Hasil menampilkan pasangan Inggris yang sudah dibersihkan dan Indonesia. Mengelompokkan paragraf serta menyesuaikan sapaan tidak menjadikan model dasar memahami seluruh cerita atau menjamin semua idiom benar.
 
 AI lokal opsional menerima gaya bahasa serta Catatan cerita (maksimum 800 karakter pada aplikasi), misalnya hubungan pasangan atau pilihan sapaan tokoh. Server membawa konteks beberapa dialog sebelumnya dan memisahkannya bila dokumen, gaya atau catatan berubah. AI belum otomatis aktif tanpa komputer/server yang disiapkan. Kualitas keluaran model asli tetap perlu dinilai pembaca.
 
@@ -80,3 +80,22 @@ Pengenalan gratis di HP memakai petunjuk terbatas: sapaan seperti “Luna, are y
 Koreksi lewat **⋮ → Nama & istilah tetap**. Isi satu nama per baris, misalnya nama tokoh, kota, atau pedang khusus. Ejaan disimpan per cerita, mendukung nama beberapa kata, apostrof/tanda hubung dan huruf Unicode; maksimum 80 istilah, masing-masing 64 karakter. Pencocokan memakai batas kata dan tidak peka huruf besar/kecil; istilah terpanjang didahulukan. Jika suatu kata sekaligus nama dan kata umum (misalnya Ban), semua kecocokan kata itu dalam cerita akan mengikuti daftar. Bila itu tidak cocok, hapus/koreksi entri. Nama yang dihapus tidak ditambahkan otomatis lagi pada cerita itu; bisa ditambahkan manual kembali. Pengenalan otomatis bisa dimatikan. Pengaturan tetap tersimpan saat aplikasi ditutup/diperbarui.
 
 Server AI sumber diperbarui untuk menerima pemetaan nama, menjaga penanda persis sekali per blok dan menolak hasil dengan nama hilang/berulang. Riwayat konteks memakai nama asli yang dipulihkan, bukan penanda yang bisa dipakai ulang untuk nama lain. Jika memakai AI, perbarui juga `server/reader_server.py` di komputer. Nama/daftar yang cocok ikut dikirim hanya ke server AI pilihan pengguna; mode dasar tetap di HP.
+
+
+## Pembacaan dialog dan tata huruf (0.1.4)
+
+Mode gratis di HP tetap memakai model ML Kit yang sama; pembaruan ini memperbaiki masukan OCR, pengelompokan dan tampilan hasil, bukan mengganti model dengan layanan AI tersembunyi. Dialog diterjemahkan dalam kelompok berurutan sampai 8 paragraf/sekitar 4.000 karakter, termasuk layar dengan lebih dari 6 blok yang sebelumnya langsung diproses sendiri-sendiri. Jika jumlah paragraf keluaran berubah, aplikasi mencoba tiap bagian kembali. Penanda nama kini berbeda antarbalon dalam satu pembacaan; keluaran yang memindahkan/menghilangkan nama tidak langsung dipakai. Pembacaan lama dibatalkan saat pengguna menggulir agar hasil tidak menempel di posisi lama.
+
+Kontraksi Inggris yang tidak ambigu seperti “don't”, “can't”, “you're” dinormalisasi pada masukan mesin; “he's” atau “I'd” tidak ditebak karena punya beberapa arti. Perapian Indonesia mengatur spasi dan tanda baca, bukan mengganti maksud kalimat dengan contoh hafalan. Tidak ada jaminan pemahaman alur, semua idiom atau hubungan tokoh pada mode dasar. AI lokal opsional memakai konteks dialog sebelumnya dan instruksi menjaga rujukan, negasi, maksud serta emosi; tetap membutuhkan komputer/server sendiri dan dapat salah. Tidak otomatis aktif pada APK.
+
+**Huruf bergaya/terpotong:** OCR membaca piksel yang terlihat di aplikasi. Jika hasil kosong atau ada baris dengan confidence rendah, aplikasi melakukan satu percobaan tambahan pada gambar berkontras abu-abu di HP, lalu mempertahankan blok yang skornya lebih baik. Gambar asli dipakai untuk menilai warna/ukuran; file asli tidak diubah. Percobaan tambahan dibatasi satu kali dan memori; confidence OCR bukan bukti kebenaran. Huruf dekoratif ekstrem atau gambar pecah tetap bisa salah.
+
+Pemenggalan baris yang jelas pada kosakata terbatas, misalnya “SUD-” lalu “DENLY”, digabung sebelum diterjemahkan. Gagap, ucapan terputus, gabungan kata asing dan nama tidak ditebak sembarangan. Nama bertanda hubung yang sudah ada dalam daftar diperiksa sebelum penggabungan. Jeda vertikal besar antarbaris OCR menjadi paragraf terpisah. Urutan masih berdasarkan posisi teks, bukan pengenalan panel/pembicara penuh.
+
+Teks yang menyentuh tepi atas/bawah layar tidak dipaksakan menjadi kalimat lengkap: sumber tetap terlihat dan aplikasi meminta gulir sedikit supaya balon utuh. Ini menangani potongan di batas viewport, bukan memulihkan huruf yang memang hilang dari gambar. Untuk huruf sangat kecil, perbesar halaman. Tidak ada rekonstruksi ucapan atau isi gambar yang tidak terlihat.
+
+**Warna dan ukuran:** aplikasi mengambil perkiraan warna tinta dominan dari area kata OCR untuk tiap paragraf. Teks merah/biru/warna terang dapat tetap berwarna; warna yang kurang kontras diberi bayangan penegas. Paragraf dengan beberapa warna/gradien tidak memiliki pemetaan arti per kata, sehingga memakai warna dominan. Hiasan, garis tepi huruf, font artistik dan gambar di belakang teks belum ditiru persis. Warna latar juga merupakan perkiraan dan dapat keliru pada gambar ramai.
+
+Ukuran huruf mengikuti tinggi tulisan sumber dan ruang hasil OCR, dengan batas 38 piksel lama dihapus. Teks besar menjaga penekanannya, teks panjang mengecil sebatas ukuran yang masih terbaca. Jika tidak muat pada batas itu, sumber dibiarkan terlihat dengan penanda “Hasil ↗”; baca terjemahan lengkap lewat tombol Hasil. Teks tidak dipaksa menjadi ukuran 5 piksel. Penyelarasan tengah/kiri diperkirakan dari posisi baris sumber. Jarak antarbaris 1,12 dan jarak paragraf tambahan disesuaikan dengan ukuran huruf. Panel Hasil menyediakan teks yang bisa dipilih, ukuran lebih nyaman dan jarak antardialog.
+
+Layout dihitung saat hasil berubah, disimpan dan dipakai ulang saat menggambar, sehingga gulir tidak menghitung ulang seluruh susunan teks pada tiap frame. Pemindaian kontras, sampling warna dan model terjemahan tetap memakai sumber daya HP; performa belum diukur di perangkat pengguna.
