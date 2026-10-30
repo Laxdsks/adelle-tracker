@@ -1,40 +1,39 @@
-# Pemeriksaan TCD 0.2.0
+# Pemeriksaan TCD 0.2.1
 
-## Build dan identitas APK
+## Perubahan dan cakupan
 
-`:app:assembleDebug :app:lintDebug` lulus. APK pengguna: TCD, `com.komiklingo.app`, versionCode11/versionName0.2.0, minSDK26/targetSDK35, ARM64/ARMv7. `apksigner verify` berhasil; SHA-256 sertifikat tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1` sehingga APK dapat memperbarui aplikasi sebelumnya. Pemeriksaan ZIP/DEX/metadata memastikan fixture, ABI x86 dan resource CA uji tidak masuk APK pengguna. Log: `build-0.2.0.log`, `apk-check-0.2.0.log`.
+Masalah yang diperbaiki: OCR dapat memisahkan kata terakhir dalam balon menjadi unit terjemahan tersendiri, misalnya `... SUCH A PRICKLY` dan `CAT.`. Pemisahan ini menghilangkan konteks kata sifat/kata benda serta menambah tombol Reset. Versi ini menambahkan bukti area polos tertutup, selain pemeriksaan tata bahasa yang sudah ada, untuk menyatukan fragmen berdekatan sebelum dikirim ke penerjemah. Satu hasil gabungan memakai satu Reset.
 
-## Perubahan tampilan
+Mask area dibuat secara malas hanya jika tata bahasa belum cukup dan fragmen berdekatan/selaras. Setiap piksel dalam sel diuji, sehingga garis tipis tidak dilewati hanya karena titik sampel jatuh di sela garis. Konektivitas empat arah, area yang menyentuh tepi gambar, jarak, kolom, warna, teks perantara dan tanda akhir membatasi penyatuan. Halaman putih terbuka dan balon terpotong tidak diperlakukan sebagai area tertutup. Maksimal dua analisis warna, sekitar 350 ribu sel, buffer piksel berupa strip kecil dan batas gambar 8 megapiksel membatasi biaya tambahan. Ini bukan model pendeteksi balon dan masih dapat salah pada panel/ilustrasi atau batas yang tidak jelas.
 
-Beranda berisi Teks, Gambar & file, pencarian/alamat situs, Terjemahan layar dan satu sumber terbaru. Riwayat lengkap dibuka dalam dialog. Tidak ada istilah genre pada label produk; nama dokumen asli tidak disensor. Pembaca memiliki satu bilah atas dan tiga tombol bawah. Ikon yang bisa digeser menyembunyikan/menampilkan alat, Reset per bagian dan bilah sistem tanpa menghapus terjemahan. Status hanya chip sementara, serta kontrol aplikasi disembunyikan saat PixelCopy agar tidak ikut OCR. Warna dan kontras bilah sistem dipulihkan ketika alat ditampilkan.
+Kiasan `glare/stare/act/behave ... like a prickly cat/person/...` dinormalisasi ke grumpy hanya dalam konteks perilaku. Sumber dengan duri, jarum, kaktus, patung atau nama yang dilindungi dikecualikan. Keluaran kucing berduri diperiksa hanya jika sumber mendukung kiasan itu. Kata prickly tidak diganti secara global.
 
-Masukan teks langsung diteruskan ke model lokal tanpa OCR; tombol Salin menulis hasil ke clipboard. Perubahan input membatalkan hasil yang terlambat. Teks berbagi biasa membuka masukan teks, sedangkan URL utuh membuka pembaca. Tidak ada framework UI, provider, akun, izin atau biaya API baru.
+Struktur `I/we/you/they have`, `he/she/it has`, subjek nama yang dilindungi, atau bentuk had dengan `no intention of` dinormalisasi menjadi do/does/did not plan on. Penekanan absolutely/certainly/definitely/really, objek dan bentuk gerund tetap dipertahankan. Frasa punya/memiliki yang salah tersisa sebelum tidak berniat/bermaksud/berencana diperbaiki hanya bila sumber mendukung pola penolakan tersebut. Bentuk afirmatif, modal would have dan kepemilikan biasa tidak diubah. Aturan arti 0.2.0 serta antarmuka minimal tetap disertakan.
 
-## Bahasa: aturan terbatas, bukan model cerita baru
+## Pemeriksaan build dan aturan
 
-Lima suite JVM lulus: ReaderRules, NameRules, TranslationFlow, OcrQuality, ContextMeaning. Log: `jvm-0.2.0.log`.
+`:app:assembleDebug :app:lintDebug` lulus. Paket `com.komiklingo.app`, nama TCD, versionCode12/versionName0.2.1, minSDK26/targetSDK35; ABI ARM64/ARMv7. `apksigner verify` berhasil dan sertifikat tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1`. ZIP/DEX diperiksa tidak memuat fixture, ABI x86 atau CA sesi pengujian. Tidak ada izin, dependensi, provider jaringan atau akun baru.
 
-- Sambungan kalimat diperiksa melalui tata bahasa dan geometri: prefiks artikel/preposisi dan kelanjutan yang jelas. Border, kolom berbeda, akhir kalimat dan nama dilindungi membatasi penyatuan.
-- Modal terputus seperti `I COULDN’T...` dapat disatukan dengan kata kerja seperti `SENSE HER PRESENCE`; jeda di tengah struktur kata bantu dihapus dari input penerjemah. Pertanyaan mandiri seperti WHY NOT dan nama Sense tidak dipaksa bergabung.
-- `brand of fate/destiny` diperjelas sebagai tanda takdir; konteks produk/perusahaan serta nama yang dilindungi tetap dijaga. Artikel A yang tertinggal setelah adalah/merupakan/ada hanya dibersihkan bila sumber mendukung makna artikel.
-- Kesalahan target “sedihnya kehadirannya” diperbaiki menjadi “merasakan kehadirannya” hanya bila sumber mengandung sense/sensed/sensing presence. Sumber yang menyebut kesedihan sungguhan dikecualikan. Ini tidak mengubah kata English sadly menjadi sense secara global.
-- Predikat orang seperti `she’s a powerhouse` diperjelas menjadi very powerful person sebelum mesin menerjemahkan. Target pembangkit listrik diperiksa hanya dalam konteks sumber itu. Istilah yang dilindungi, kalimat tanpa subjek manusia dan konteks eksplisit pembangkitan listrik dikecualikan. Kelanjutan on the level of dapat disatukan bila dekat dalam balon yang sama. Perlindungan nama Acratos dan pengecualian listrik diuji.
-- Jalur TranslationFlow diuji menggunakan engine deterministik, termasuk input yang dinormalisasi dan keluaran yang diperiksa berdasarkan sumber. Tidak ada penggantian seluruh kalimat panel atau klaim memahami semua percakapan.
+Lima suite JVM lulus: ReaderRules, NameRules, TranslationFlow, OcrQuality dan ContextMeaning. Kasus baru mencakup input/hasil prickly figuratif dan literal, istilah yang dilindungi, bentuk negatif/afirmatif intention, tense serta pemanggilan TranslationFlow. Engine pada tes alur bersifat deterministik; tes tersebut memeriksa aturan/input/output, bukan kemampuan model ML Kit asli.
+
+Log build: `validation/build-0.2.1.log`; aturan: `validation/jvm-0.2.1.log`; identitas APK: `validation/apk-check-0.2.1.log`.
 
 ## Pengujian Android
 
-Emulator Android11/API30 x86_64 dengan rendering perangkat lunak. Log awal `ui-initial-0.2.0.log`: 10 tes lulus (MinimalUi2, HomeHistory2, RetainedTranslation3, ContextAssembly3). Log `ui-reset-hidden-0.2.0.log`: dua tes UI lulus setelah Reset ikut disembunyikan pada mode bersih. Log `context-sense-0.2.0.log`: empat tes assembly lulus termasuk modal terputus. Pemeriksaan terakhir UI/assembly: enam tes lulus, termasuk geometri powerhouse dan kontras bilah sistem ketika alat ditampilkan kembali. Log `ui-context-final-0.2.0.log`.
+Sebelas tes Android lulus: BalloonContextTest4, ContextAssemblyTest4 dan RetainedTranslationTest3. Log `validation/balloon-native-0.2.1.log`.
 
-Uji beranda mencakup label umum, pemilihan item Riwayat sebenarnya dan pemulihan posisi. Uji pembaca menjalankan WebView/PixelCopy/OCR nyata pada fixture sumber HELLO WORLD, memastikan kontrol/status tidak terbaca, area membesar ketika bilah disembunyikan dan cache dipertahankan. Uji masukan teks menjalankan translate/copy/edit dan membersihkan hasil basi. Engine terjemahan UI/cache dibuat deterministik agar pengujian tidak bergantung unduhan model.
+- BalloonContextTest: fragmen tiga blok serta kata sifat yang tidak terdaftar dapat digabung dalam area tertutup; halaman terbuka, balon terpotong, border tipis, kolom berbeda, tanda akhir dan teks perantara membatasi penyatuan. OCR Latin ML Kit nyata pada gambar sintetis miring/kapital menghasilkan satu unit kalimat prickly cat untuk input terjemahan.
+- ContextAssemblyTest: aturan sambungan prefiks, modal terputus, powerhouse, nama serta separator lama tetap diperiksa; OCR nyata pada fixture brand of fate tetap disatukan.
+- RetainedTranslationTest: terjemahan biasa bertahan saat scroll, Reset hanya mengulang bagian terpilih, hasil lama tetap tersedia saat gagal, refresh/next/back membersihkan dokumen, hasil tumpang tindih tidak ditumpuk dan drag dari Reset tetap menggulir.
 
-Uji assembly menjalankan OCR ML Kit nyata pada gambar balon sintetis serta pemeriksaan geometri modal/powerhouse, border dan kolom. Cache/Reset memastikan hasil bertahan saat scroll, hanya bagian yang dipilih dibaca ulang, percobaan gagal menjaga hasil sebelumnya, hasil tumpang tindih tidak ditumpuk, serta refresh/next/back membersihkan dokumen. Screenshot `minimal-*.png` adalah fixture sintetis, bukan bukti keluaran bahasa mesin asli atau gambar pengguna.
+Android memakai emulator Android11/API30 x86_64 dengan rendering perangkat lunak. OCR, bitmap, geometri, cache dan View menggunakan implementasi asli. Penerjemah dalam fixture cache memakai engine simulasi. Gambar uji dibangkitkan dari teks, tanpa membundel screenshot pengguna. `captureTest` hanya untuk APK pengujian.
 
-## Model terjemahan asli: belum berhasil diuji
+## Batas kualitas dan verifikasi
 
-RealTranslationTest mencoba mengunduh model Inggris–Indonesia melalui SDK ML Kit. Task tidak selesai dalam batas 180 detik, sehingga gagal TimeoutException sebelum inferensi. Log `real-model-attempt-0.1.9.log` merekam percobaan; ini bukan tes lulus dan tidak membuktikan kualitas terjemahan model asli. Resource trust CA percobaan hanya berada di luar proyek dan tidak masuk APK pengguna/sumber. TLS produksi tidak dilonggarkan.
+Model gratis tetap ML Kit. Tidak ada AI pemahaman seluruh cerita yang baru. Menyatukan teks dan memperjelas arti tertentu membantu contoh yang didukung aturan, tetapi tidak menjamin semua dialog, emosi, idiom atau nama akurat. Kalimat terpotong, balon tidak tertutup/berwarna rumit, font dekoratif dan OCR yang salah masih dapat menghasilkan kesalahan. Lihat asli/Hasil tetap tersedia untuk membandingkan.
 
-Model gratis tetap ML Kit yang sama. Aturan lokal membantu frasa tertentu dan sambungan teks, tetapi tidak menjamin semua idiom, emosi, nama atau makna cerita benar. Teks OCR salah, font dekoratif dan kalimat terpotong masih dapat gagal. Pengguna tetap dapat membandingkan sumber melalui Lihat asli/Hasil. AI lokal opsional pada pembaca membutuhkan komputer/server sendiri; masukan teks dan balon tetap lokal.
+Percobaan model Inggris–Indonesia asli pada tahap 0.2.0 belum mencapai inferensi: unduhan SDK melewati 180 detik. Log historis `real-model-attempt-0.1.9.log` tetap disertakan. Percobaan tersebut tidak dianggap tes lulus dan tidak diulang sebagai bukti kualitas bahasa versi ini. Hasil terjemahan model asli di HP fisik pengguna belum diverifikasi.
 
-Tidak diuji di HP fisik pengguna atau runtime Android14/15. Service balon tidak diuji ulang pada tahap ini; batas MediaProjection emulator pada 0.1.8 tetap tercatat dalam validasi historis. Backend server tidak berubah dan tes server tidak diulang. APK bertanda tangan pengembangan, belum rilis Play Store.
+Service balon dan server AI opsional tidak diubah khusus pada rilis ini; service memakai helper paragraf/aturan yang sama. MediaProjection tidak diuji ulang; batas historisnya tetap dicatat dalam validasi 0.1.8. Belum diuji di HP pengguna atau runtime Android14/15. APK memakai tanda tangan pengembangan, belum dirilis di Play Store.
 
-Sumber tidak menyertakan keystore, local.properties, cache build, resource CA sesi atau gambar pengguna. Artefak TCD dan alias kompatibilitas KomikLingo dipublikasikan hanya pada branch unduhan; main dan sumber Dualworld tidak diubah.
+Publikasi mencakup APK, checksum, panduan, catatan pemeriksaan dan ZIP sumber TCD beserta alias kompatibilitas KomikLingo hanya pada branch unduhan. Sumber tidak memuat keystore, local.properties, cache build atau CA sesi. Tidak mengubah main maupun sumber Dualworld. Pemeriksaan antarmuka 0.2.0 tetap tersedia dalam catatan historis.
