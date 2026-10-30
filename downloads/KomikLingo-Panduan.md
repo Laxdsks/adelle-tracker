@@ -1,4 +1,4 @@
-# TCD 0.3.2
+# TCD 0.3.3
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
@@ -40,6 +40,8 @@ Refresh, next/back, sumber baru dan penghentian proses menghapus cache dokumen. 
 **Terjemahkan 1 halaman** tetap tersedia lewat Menu dan hanya memindai dokumen aktif dari atas sampai bawah, tanpa membuka tautan berikutnya. Gunakan mode biasa untuk membaca bertahap. Batas pemindaian 400 viewport atau 6.000 bagian; halaman tanpa akhir, scroll-container khusus, canvas/iframe atau pergeseran layout masih dapat membatasi hasil.
 
 ## Bahasa dan tampilan hasil
+
+Versi 0.3.3 memperjelas beberapa ungkapan percakapan dari teks sumber yang terbaca: `show some restraint` menjadi ajakan menahan diri, `away from my post` merujuk pada pos tugas, dan `stay here any longer` mempertahankan arti “lebih lama”. `Dally around with that sly fox of an elf` dibaca sebagai berlama-lama bersama Elf yang licik; `get lost` pada perintah berarti pergi sana, sedangkan `see you around` berarti sampai jumpa lagi. Susunan `crush them beneath my feet` juga dirapikan. Rubah sungguhan, alat pengekang, posting blog, tersesat secara harfiah, serta kalimat lain yang mirip tetapi berbeda tetap dikecualikan. Balasan `are you leaving?` yang sudah benar secara arti dipertahankan.
 
 Versi 0.3.2 menambah pemeriksaan fungsi percakapan: `must be waiting` dapat bermakna dugaan “pasti menunggu”, sedangkan kewajiban/perintah dan tenggat tidak otomatis diubah. Balasan `not at all` dibedakan memakai sumber permintaan maaf atau ucapan terima kasih terdekat: “tidak apa-apa” atau “sama-sama”. Negasi biasa tetap negasi. Penekanan `we have just arrived ourselves` dibedakan dari `by ourselves` yang berarti sendirian.
 
