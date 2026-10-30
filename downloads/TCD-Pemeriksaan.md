@@ -1,19 +1,21 @@
-# Pemeriksaan TCD 0.3.4
+# Pemeriksaan TCD 0.3.5
 
 ## Perubahan
 
-Balon `My apologies for the delay` kini dapat membetulkan keluaran harfiah “permintaan maaf aku atas ...” menjadi “Maaf atas ...”. `I had some urgent matters to attend to` diperjelas sebagai urusan mendesak yang harus ditangani. Pada sapaan kerajaan, `your majesty's ocean-like grace` berarti kemurahan hati Yang Mulia yang seluas lautan, dan `I was able to preserve my life` berarti nyawa pembicara selamat. Aturan hanya aktif jika petunjuk Inggris yang sesuai terbaca. Perawatan pasien (`attend to the patient`) dan pelestarian kehidupan laut tetap diperlakukan sesuai konteks masing-masing.
+Aturan sumber Inggris menangani ungkapan dan kesalahan harfiah pada cuplikan Chronicle of Runes bab 54–55: `am I to take it that`, `quick on the uptake`, `keep one another in check`, `strip away everything he holds dear`, `pull stunt this a whole year later`, `Grand Duke`, `felled by a mere spirit-race wench`, `in your favor`, `preemptive strike`, `nor any justification`, `convene the council`, `living in peace ... grand delusion`, dan `justification wouldn't matter in the first place`. Teks yang terbaca sebagai dua blok dapat disatukan hanya jika tata bahasa, jarak, warna, dan piksel pembatas cocok. Pola `then ami to take it` hanya memicu baca ulang OCR; huruf tidak diganti tanpa kandidat dari piksel. Contoh harfiah seperti mengambil benda, penyerapan air, menebang pohon, dan pencegahan medis menjadi pembanding.
 
 ## Pengujian
 
-Sembilan suite JVM lulus pada sumber final, termasuk contoh hasil yang dilaporkan dan pembanding literal. Log: `validation/jvm-0.3.4.log`. Build ARM dan lint lulus: `:app:assembleDebug :app:lintDebug`. Log: `validation/build-arm-0.3.4.log`.
+Sembilan suite JVM lulus pada sumber final, termasuk contoh keluaran yang dilaporkan dan pembanding. Log: `validation/jvm-0.3.5.log`. Build APK ARM dan lint lulus: `:app:assembleDebug :app:lintDebug`. Log: `validation/build-arm-0.3.5.log`.
 
-APK pengguna diperiksa langsung: `com.komiklingo.app`, versionName `0.3.4`/versionCode `18`, minSDK26/targetSDK35, ARM64 dan ARMv7. Sertifikat SHA-256 tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1`, sehingga dapat dipasang sebagai pembaruan. DEX berisi aturan baru, sedangkan kelas fixture dan x86 tidak masuk APK pengguna. Log: `validation/apk-0.3.4.log`.
+Uji Android `ContextAssemblyTest` lulus 5/5 pada emulator, termasuk penyatuan pertanyaan lintas blok, batas jarak, dan garis pemisah balon. Log: `validation/android-context-0.3.5.log`. Ini memeriksa alur OCR dan geometri, bukan hasil model terjemahan asli.
 
-Perubahan versi ini hanya pada aturan bahasa. UI, OCR, izin dan alur Android tidak diubah. Tes Android tidak dijalankan ulang; basis sebelumnya lulus 12 tes konteks/geometri dan 5 tes integrasi versi 0.3.2. Rinciannya ada dalam `validation/functional-0.3.2.md`; pemeriksaan 0.3.3 tersimpan di `validation/functional-0.3.3.md`.
+APK pengguna diperiksa langsung: `com.komiklingo.app`, versionName `0.3.5`/versionCode `19`, minSDK26/targetSDK35, ARM64 dan ARMv7. Sertifikat SHA-256 tetap `bb1ef448fb34777d2d03a49e7bfdb2bfb355ba7d57fe7b6a11f410d020e346a1`, sehingga dapat dipasang sebagai pembaruan. DEX memuat aturan baru; kelas fixture dan x86 tidak masuk APK pengguna. Log: `validation/apk-0.3.5.log`.
+
+Penyisiran seluruh tes Android tidak menjadi bukti kelulusan: `BrowserColdStartTest.verify` memang dirancang berjalan di proses terpisah setelah `seed`; dalam penyisiran tunggal ia gagal. Tes capture layar mengambang melaporkan `NO_TEXT`, lalu proses emulator mengalami crash pada percobaan terpisah. Log mentah ada di `validation/android-full-0.3.5.log` dan `validation/android-floating-0.3.5.log`. Tidak ada perubahan pada browser, MediaProjection, izin, atau layanan layar mengambang dalam versi ini.
 
 ## Batas
 
-Mesin dasar masih ML Kit. Uji bahasa memakai contoh keluaran deterministik; inferensi model terjemahan asli belum terverifikasi karena unduhan model pada emulator pernah melewati 180 detik. Aturan ini tidak menjamin memahami semua dialog, OCR dekoratif, nama atau kalimat terpotong. Belum diuji pada HP pengguna maupun Android14/15. APK masih bertanda tangan pengembangan, bukan rilis Play Store. Fungsi browser, filter, MediaProjection dan server AI tidak diubah atau diuji ulang pada 0.3.4.
+Mesin dasar masih ML Kit. Uji bahasa memakai keluaran deterministik; inferensi model terjemahan asli belum terverifikasi karena unduhan model pada emulator sebelumnya melewati 180 detik. Aturan tidak menjamin semua dialog, OCR dekoratif, nama, atau kalimat terpotong benar. Belum diuji pada HP pengguna maupun Android14/15. APK masih bertanda tangan pengembangan, bukan rilis Play Store.
 
-Identitas aplikasi, sertifikat, izin dan dependensi tidak berubah. Sumber/artefak tidak menyertakan gambar pengguna, keystore, CA sesi atau kredensial.
+Identitas aplikasi, sertifikat, izin, dan dependensi tidak berubah. Sumber/artefak tidak menyertakan gambar pengguna, keystore, CA sesi, atau kredensial.
