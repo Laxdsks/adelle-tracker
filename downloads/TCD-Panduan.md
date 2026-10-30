@@ -1,6 +1,8 @@
-# TCD 0.3.10
+# TCD 0.3.11
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
+
+Versi 0.3.11 menambahkan konteks sebelum/sesudah kelompok dialog, jika tersedia dan muat dalam batas pemrosesan. Hanya hasil balon sasaran ditampilkan. Pembandingan hasil OCR menjaga kata negasi dan angka agar bacaan baru tidak membalik makna atau mengganti jumlah. Ini perbaikan alur; kemampuan bahasa dasar tetap memakai model ML Kit offline.
 
 ## Mulai
 
