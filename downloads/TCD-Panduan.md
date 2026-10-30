@@ -1,4 +1,4 @@
-# TCD 0.3.1
+# TCD 0.3.2
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
@@ -41,6 +41,14 @@ Refresh, next/back, sumber baru dan penghentian proses menghapus cache dokumen. 
 
 ## Bahasa dan tampilan hasil
 
+Versi 0.3.2 menambah pemeriksaan fungsi percakapan: `must be waiting` dapat bermakna dugaan “pasti menunggu”, sedangkan kewajiban/perintah dan tenggat tidak otomatis diubah. Balasan `not at all` dibedakan memakai sumber permintaan maaf atau ucapan terima kasih terdekat: “tidak apa-apa” atau “sama-sama”. Negasi biasa tetap negasi. Penekanan `we have just arrived ourselves` dibedakan dari `by ourselves` yang berarti sendirian.
+
+Perbaikan lain mencakup tokoh penting (`key figures`) saat orang-orang berkumpul, arti menganut (`hold a doctrine`), ungkapan `good grief`, `mind-boggling`, `back-alley thugs`, `do you happen to mean…?`, kelompok yang berkembang pesat, shielding/melindungi dan tag penjelas `that is`. Laporan angka, benda fisik, kesedihan sungguhan dan istilah yang dilindungi menjadi pengecualian. Aturan ini terikat frasa dan konteks terbatas, bukan pengganti mesin bahasa.
+
+Klausa objek seperti `the item that the kingdom of [nama] is creating` diperjelas sebagai “yang sedang dibuat oleh…” supaya pelaku dan objek tidak tertukar. Ini berlaku pada beberapa kata kerja membuat, membangun, mengembangkan dan memproduksi yang didukung. Nama pada slot `Kingdom of …`, kelompok tertentu dan label dalam tanda kutip yang dipakai sebagai istilah dapat dipertahankan. Ejaan tetap bergantung OCR; aplikasi tidak menebak bahwa dua nama berbeda pasti orang yang sama.
+
+Sumber paragraf sebelum dan sesudah digunakan dari bagian terdekat di kolom yang sama, termasuk bagian yang sudah tersimpan saat Reset satu hasil. Pergantian konteks mengubah kunci cache. Teks efek cahaya gelap dengan sambungan tata bahasa yang kuat mendapat pemeriksaan penggabungan, dengan batas geometri/garis pemisah. Pola tanda tanya yang terbaca 7, `…P!` atau `nation op the continent` memicu baca ulang kandidat piksel, tanpa mengganti angka/huruf berdasarkan tebakan saja. Tidak ada izin, layanan, API berbayar atau model unduhan baru.
+
 Versi 0.3.1 memperbaiki arti `collection of the bodies` pada konteks pemakaman menjadi pengumpulan jenazah. Petunjuk harus ada pada teks itu sendiri atau klausa tujuan terdekat seperti `so that their funerals…`; tubuh orang hidup, badan kendaraan, benda langit dan nama yang dilindungi tidak diganti berdasarkan kata funeral di sembarang tempat. Urutan nama tempat yang telah dikenali ditata menjadi Kerajaan Bahain, Kota …, Desa … atau Kekaisaran … tanpa mengubah ejaan nama. Ini berlaku untuk nama lain yang telah dikenali, bukan daftar satu adegan saja.
 
 Pembaca memakai sumber bagian terdekat di kolom yang sama, termasuk sumber dari hasil yang sudah tersimpan, saat menerjemahkan ulang satu bagian. Tetangga yang jauh, kolom terpisah dan dokumen sebelumnya tidak dijadikan petunjuk. Perubahan petunjuk juga mengubah kunci cache. Petunjuk ini hanya membantu aturan arti tertentu; model gratis belum memahami semua konteks cerita atau menjamin semua kalimat benar. Tidak ada layanan berbayar, izin atau unduhan model tambahan.
@@ -58,6 +66,8 @@ Pola OCR mencurigakan seperti NE PLAN atau READY TO MOE memicu pembacaan ulang d
 Frasa sakit seperti headache is flaring up diperjelas sebagai getting worse; api/flames dan nama yang dilindungi tidak diganti. Versi ini juga membaca `burst in/into` dan `barge in/into` bersama pelaku dan pelengkapnya. Arti masuk mendadak dibedakan dari bom, tangisan, api dan kata yang menjadi nama. Bentuk waktu yang jelas dipertahankan; ejaan burst tanpa bukti waktu tidak dipaksa menjadi lampau. Koreksi “aku meledak” menjadi “aku menerobos masuk” hanya berlaku ketika sumber mendukung arti masuk.
 
 Kalimat pembuka dan klausa waktu yang dekat bisa disatukan jika berada pada area tertutup yang sama. Klausa lengkap yang jelas berlanjut dengan tanda pisah dapat memakai koma pada masukan penerjemah ketika bagian berikutnya berupa klausa utama. Hasil pada balon yang berjauhan tetap memakai kotaknya masing-masing. Ini membantu struktur kalimat, bukan memahami seluruh percakapan secara otomatis.
+
+Tambahan aturan 0.3.2 membedakan `grave and solemn matter`, `discussion regarding`, nasib yang dipertaruhkan (`hangs the fate … in the balance`), dan `slacking off` dari penggunaan fisik tali/keseimbangan. `Elven race` pada konteks gen/kesuburan ditafsirkan sebagai ras Elf, sedangkan perlombaan dengan petunjuk kompetisi tidak diubah. Ditambahkan pula arti bahasa untuk vocabulary/sophisticated, perilaku frivolously, sugarcoat it, this instant, had him … subdued dan wrap this up, dengan pengecualian teknologi, makanan/gula, benda yang dibungkus, warna/suasana dan pemakaian harfiah lain. Kalimat Inggris yang memang janggal seperti `Please stop this her` tidak otomatis ditebak menjadi kata lain. Kesalahan sumber dapat membatasi mutu hasil.
 
 ## AI lokal opsional
 
