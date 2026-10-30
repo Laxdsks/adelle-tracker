@@ -1,4 +1,4 @@
-# TCD 0.2.1
+# TCD 0.2.2
 
 Penerjemah Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
@@ -32,6 +32,12 @@ Refresh, next/back, sumber baru dan penghentian proses menghapus cache dokumen. 
 Perbaikan penyatuan kalimat dan pemilihan arti termasuk dalam versi ini. Potongan OCR dengan sambungan tata bahasa yang jelas dicoba disatukan berdasarkan posisi, warna dan piksel pembatas. Potongan yang belum utuh ditunda, bukan ditebak. Mulai 0.2.1, potongan tanpa tanda akhir juga bisa digabung bila berdekatan, selaras dan terbukti berada di area polos tertutup yang sama. Ini membantu kata sifat dan kata benda yang terpisah blok OCR, tanpa membutuhkan daftar semua kata sifat. Halaman putih terbuka, balon terpotong, border pemisah, kolom berbeda dan akhir kalimat tetap membatasi penggabungan. Penyesuaian arti lokal yang terbatas membedakan frasa seperti brand of fate (tanda takdir) dari konteks produk (merek). Nama yang telah dilindungi dipertahankan; daftar manual tersedia di pengaturan sumber. Jeda sesudah kata bantu seperti “I couldn’t…” dicoba disambungkan dengan kata kerja berikutnya. Frasa “sense her presence” mendapat pemeriksaan arti terbatas agar keluaran salah “sedihnya kehadirannya” dapat diperbaiki; sumber yang menyebut kesedihan sungguhan tidak ditimpa. “She’s a powerhouse” diperjelas sebagai orang yang sangat kuat, dengan pengecualian konteks listrik dan istilah yang dilindungi. Kiasan perilaku seperti “glare … like a prickly cat” diperjelas sebagai kucing pemarah/galak, dengan pengecualian konteks duri/benda dan nama yang dilindungi. Pola “I have absolutely no intention of…” diperjelas menjadi struktur penolakan yang utuh; kata punya yang salah tersisa sebelum “tidak berniat” dibersihkan hanya bila sumber mendukungnya. Ini aturan lokal yang terikat sumber, bukan pemahaman otomatis semua cerita. Model dasar tetap ML Kit, bukan AI pemahaman seluruh konteks.
 
 Penutup sumber digambar sebelum semua teks hasil agar penutup tetangga tidak memotong baris. Warna, ukuran dan kemiringan diperkirakan; font asli tidak disalin persis dan gambar di balik huruf tidak dipulihkan. Jika teks tidak muat pada ukuran terbaca, Hasil menyediakan teks lengkap. Tulisan dekoratif, gambar pecah, latar ramai, nama ambigu dan kalimat yang terpotong masih bisa salah. Bandingkan Lihat asli/Hasil.
+
+## Kata kerja berpasangan
+
+Versi 0.2.2 membaca `burst in/into` dan `barge in/into` bersama pelaku dan pelengkapnya. Arti masuk mendadak dibedakan dari bom, tangisan, api dan kata yang menjadi nama. Bentuk waktu yang jelas dipertahankan; ejaan burst tanpa bukti waktu tidak dipaksa menjadi lampau. Koreksi “aku meledak” menjadi “aku menerobos masuk” hanya berlaku ketika sumber mendukung arti masuk.
+
+Kalimat pembuka dan klausa waktu yang dekat bisa disatukan jika berada pada area tertutup yang sama. Klausa lengkap yang jelas berlanjut dengan tanda pisah dapat memakai koma pada masukan penerjemah ketika bagian berikutnya berupa klausa utama. Hasil pada balon yang berjauhan tetap memakai kotaknya masing-masing. Ini membantu struktur kalimat, bukan memahami seluruh percakapan secara otomatis.
 
 ## AI lokal opsional
 
