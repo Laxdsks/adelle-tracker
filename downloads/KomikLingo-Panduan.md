@@ -1,8 +1,10 @@
-# TCD 0.3.7
+# TCD 0.3.8
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
 ## Mulai
+
+Versi 0.3.8 memperbaiki alur offline: nama setelah Mr./Mrs./Ms./Dr. dilindungi otomatis, pemberitahuan penerbit disaring dari hasil pindai, dan percobaan ulang terjemahan memakai jendela dialog sebelum/sesudah jika tersedia. Hanya hasil balon yang diminta dipakai; keluaran yang mengubah jumlah balon atau penanda nama dicoba kembali. Ini membantu konteks, tetapi ML Kit tetap tidak menjamin pemahaman cerita atau terjemahan sempurna. Tidak perlu server untuk fitur ini.
 
 Pasang `TCD-Android.apk` pada Android 8+ ARM64/ARMv7 sebagai pembaruan aplikasi sebelumnya. Model Inggris–Indonesia perlu diunduh sekali; setelah siap, mode dasar memproses teks/file di HP. Membuka situs tetap membutuhkan internet.
 
