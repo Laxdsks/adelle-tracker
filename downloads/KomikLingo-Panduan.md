@@ -1,6 +1,6 @@
-# TCD 0.2.2
+# TCD 0.3.0
 
-Penerjemah Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
+Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
 ## Mulai
 
@@ -13,11 +13,23 @@ Beranda menampilkan **Teks**, **Gambar & file**, kolom alamat/pencarian dan **Te
 - **Situs:** masukkan URL atau kata kunci. Pencarian memakai DuckDuckGo. Aturan login, pembatasan WebView dan akses situs tetap berlaku; aplikasi tidak melewatinya.
 - **Terjemahan layar:** aktifkan balon dengan izin Android, buka aplikasi lain, lalu ketuk balon. Tutup hasil untuk kembali menggulir. Tahan balon untuk menu atau hentikan lewat notifikasi. Sesi berhenti saat layar dikunci. Layar yang dilindungi tidak bisa dibaca. Pengaturan tambahan tidak perlu diisi untuk mulai.
 
+## Tab, bookmark dan perlindungan situs
+
+Angka di samping kolom alamat membuka daftar **Tab**. Tekan **+ Tab baru** untuk halaman baru; pilih judul untuk berpindah dan × untuk menutup tab. Maksimal 16 tab. URL, judul, tab terpilih dan posisi gulir disimpan lokal setelah aplikasi ditutup. Saat mulai, beranda tetap muncul dan tab tersimpan tidak diunduh bersamaan. Satu WebView memuat tab yang dipilih agar hemat RAM; berpindah tab memuat ulang URL/posisinya. Riwayat mundur/maju WebView direset ketika berganti tab agar halaman tab lain tidak terbuka lewat Back. Riwayat global tetap tersedia lewat Menu → Riwayat di beranda.
+
+Pada halaman web, buka Menu → **☆ Simpan bookmark**. Daftar **★ Bookmark** tersedia di menu dan ikon bintang beranda. Buka dengan mengetuk judul atau hapus dengan ×; maksimal 200 alamat. Bookmark menyimpan alamat, bukan salinan halaman offline. Tekan lama tautan untuk membuka tab baru atau menyimpannya. File lokal tetap dibuka melalui Gambar & file dan tidak ditulis menjadi bookmark web.
+
+Penyaring domain iklan/pelacak, cookie pihak ketiga yang dibatasi dan penolakan popup skrip aktif sejak awal. Daftar domain dibundel, tanpa mengunduh filter eksternal. CSS menyembunyikan beberapa slot iklan umum; gambar halaman tetap dimuat. Ini dapat mengurangi transfer iklan, tetapi iklan pihak pertama, domain baru atau iklan yang menjadi bagian gambar masih bisa tampil. Menu → **Perlindungan situs** menyediakan pengecualian domain bila sumber terganggu; memuat ulang menghapus hasil terjemahan dokumen aktif. Popup skrip tetap diblokir; tautan nyata dapat dibuka ke tab baru. Akses kamera/mikrofon dari situs tidak diberikan.
+
+Koneksi situs memakai HTTPS, sertifikat bermasalah dibatalkan dan Safe Browsing WebView diaktifkan bila tersedia dari provider Android. Ini tidak menjamin semua situs aman. DuckDuckGo ialah mesin pencari, bukan VPN: aplikasi ini tidak memintas blokir ISP/DNS, CAPTCHA, pembatasan akun/wilayah atau sertifikat situs. Hasil pencarian mengikuti pengaturan DuckDuckGo dan aturan situs. Tidak ada VPN/proxy, akun browser, sinkronisasi cloud atau API pencarian baru.
+
+Menu halaman juga menyediakan Muat ulang, Maju, Buka file, Pengaturan dan submenu Terjemahan. **Terjemahkan 1 halaman**, Otomatis, Teks dan Terjemahan layar ada di submenu Terjemahan; kemampuan sebelumnya tetap tersedia.
+
 ## Area baca yang lebih luas
 
 Bilah atas dipadatkan menjadi satu baris. Bilah bawah berisi Terjemahkan, Lihat asli dan Hasil. Ketuk ikon sudut layar untuk menyembunyikan alat: bilah atas/bawah, bilah sistem Android dan tombol Reset per bagian ikut tersembunyi. Ikon kecil tetap ada untuk menampilkan alat kembali; ikon dapat digeser jika menutupi isi. Android juga dapat menampilkan bilah sistem sementara lewat sapuan tepi layar.
 
-Status pemrosesan hanya muncul sementara, bukan panel tetap. Menu menyimpan Otomatis, pemindaian 1 halaman dan pengaturan tambahan. Tampilan penuh tidak menghapus terjemahan.
+Status pemrosesan hanya muncul sementara, bukan panel tetap. Menu → Terjemahan menyimpan Otomatis dan pemindaian 1 halaman; pengaturan tambahan ada di Menu → Pengaturan. Tampilan penuh tidak menghapus terjemahan.
 
 ## Hasil tersimpan dan Reset
 
@@ -31,11 +43,15 @@ Refresh, next/back, sumber baru dan penghentian proses menghapus cache dokumen. 
 
 Perbaikan penyatuan kalimat dan pemilihan arti termasuk dalam versi ini. Potongan OCR dengan sambungan tata bahasa yang jelas dicoba disatukan berdasarkan posisi, warna dan piksel pembatas. Potongan yang belum utuh ditunda, bukan ditebak. Mulai 0.2.1, potongan tanpa tanda akhir juga bisa digabung bila berdekatan, selaras dan terbukti berada di area polos tertutup yang sama. Ini membantu kata sifat dan kata benda yang terpisah blok OCR, tanpa membutuhkan daftar semua kata sifat. Halaman putih terbuka, balon terpotong, border pemisah, kolom berbeda dan akhir kalimat tetap membatasi penggabungan. Penyesuaian arti lokal yang terbatas membedakan frasa seperti brand of fate (tanda takdir) dari konteks produk (merek). Nama yang telah dilindungi dipertahankan; daftar manual tersedia di pengaturan sumber. Jeda sesudah kata bantu seperti “I couldn’t…” dicoba disambungkan dengan kata kerja berikutnya. Frasa “sense her presence” mendapat pemeriksaan arti terbatas agar keluaran salah “sedihnya kehadirannya” dapat diperbaiki; sumber yang menyebut kesedihan sungguhan tidak ditimpa. “She’s a powerhouse” diperjelas sebagai orang yang sangat kuat, dengan pengecualian konteks listrik dan istilah yang dilindungi. Kiasan perilaku seperti “glare … like a prickly cat” diperjelas sebagai kucing pemarah/galak, dengan pengecualian konteks duri/benda dan nama yang dilindungi. Pola “I have absolutely no intention of…” diperjelas menjadi struktur penolakan yang utuh; kata punya yang salah tersisa sebelum “tidak berniat” dibersihkan hanya bila sumber mendukungnya. Ini aturan lokal yang terikat sumber, bukan pemahaman otomatis semua cerita. Model dasar tetap ML Kit, bukan AI pemahaman seluruh konteks.
 
-Penutup sumber digambar sebelum semua teks hasil agar penutup tetangga tidak memotong baris. Warna, ukuran dan kemiringan diperkirakan; font asli tidak disalin persis dan gambar di balik huruf tidak dipulihkan. Jika teks tidak muat pada ukuran terbaca, Hasil menyediakan teks lengkap. Tulisan dekoratif, gambar pecah, latar ramai, nama ambigu dan kalimat yang terpotong masih bisa salah. Bandingkan Lihat asli/Hasil.
+Penutup sumber digambar sebelum semua teks hasil agar penutup tetangga tidak memotong baris. Warna, ukuran dan kemiringan diperkirakan; font asli tidak disalin persis dan gambar di balik huruf tidak dipulihkan. Jika teks tidak muat pada ukuran terbaca, teks asli tidak ditutupi sebagian. Tombol kecil Terjemahan ↗ di luar area teks membuka hasil lengkap yang dapat dipilih/disalin, beserta Reset. Jika tidak ada ruang untuk tombol, gunakan Hasil. Tampilkan alat dahulu jika sedang memakai mode bersih. Tulisan dekoratif, gambar pecah, latar ramai, nama ambigu dan kalimat yang terpotong masih bisa salah. Bandingkan Lihat asli/Hasil.
 
-## Kata kerja berpasangan
+## Kecepatan, OCR dan kata kerja berpasangan
 
-Versi 0.2.2 membaca `burst in/into` dan `barge in/into` bersama pelaku dan pelengkapnya. Arti masuk mendadak dibedakan dari bom, tangisan, api dan kata yang menjadi nama. Bentuk waktu yang jelas dipertahankan; ejaan burst tanpa bukti waktu tidak dipaksa menjadi lampau. Koreksi “aku meledak” menjadi “aku menerobos masuk” hanya berlaku ketika sumber mendukung arti masuk.
+Cache 0.3.0 memakai kembali terjemahan unit yang telah berhasil dengan sumber dan konteks tetangga yang sama, termasuk keluaran batch. Kunci konteks dipadatkan dengan SHA-256; data terjemahan tetap hanya di RAM dalam batas cache 400 entri yang sama. Perubahan konteks, hasil tidak valid atau Reset tidak memakai hasil unit lama. Ini mengurangi pekerjaan berulang; tidak mengunduh model/menambah kuota pada tiap kalimat. Kecepatan tergantung HP dan hasil OCR, bukan jaminan waktu tertentu. Situs/gambar masih memakai internet dan unduhan model awal tetap diperlukan.
+
+Pola OCR mencurigakan seperti NE PLAN atau READY TO MOE memicu pembacaan ulang dari piksel dalam batas percobaan yang sudah ada. Tidak ada penggantian NE menjadi WE atau nama Moe menjadi MOVE tanpa kandidat OCR baru; nama yang dilindungi tetap dijaga. Nama tempat baru sebelum Kingdom/Empire/City/Village bisa dikenali bila kapitalisasi dan kosakata mendukung. Ejaan yang sudah salah di sumber OCR masih bisa salah.
+
+Frasa sakit seperti headache is flaring up diperjelas sebagai getting worse; api/flames dan nama yang dilindungi tidak diganti. Versi ini juga membaca `burst in/into` dan `barge in/into` bersama pelaku dan pelengkapnya. Arti masuk mendadak dibedakan dari bom, tangisan, api dan kata yang menjadi nama. Bentuk waktu yang jelas dipertahankan; ejaan burst tanpa bukti waktu tidak dipaksa menjadi lampau. Koreksi “aku meledak” menjadi “aku menerobos masuk” hanya berlaku ketika sumber mendukung arti masuk.
 
 Kalimat pembuka dan klausa waktu yang dekat bisa disatukan jika berada pada area tertutup yang sama. Klausa lengkap yang jelas berlanjut dengan tanda pisah dapat memakai koma pada masukan penerjemah ketika bagian berikutnya berupa klausa utama. Hasil pada balon yang berjauhan tetap memakai kotaknya masing-masing. Ini membantu struktur kalimat, bukan memahami seluruh percakapan secara otomatis.
 
