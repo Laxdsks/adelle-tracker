@@ -1,19 +1,19 @@
-# TCD 0.4.0
+# TCD 0.4.2
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
 Versi 0.3.11 menambahkan konteks sebelum/sesudah kelompok dialog, jika tersedia dan muat dalam batas pemrosesan. Hanya hasil balon sasaran ditampilkan. Pembandingan hasil OCR menjaga kata negasi dan angka agar bacaan baru tidak membalik makna atau mengganti jumlah. Ini perbaikan alur; kemampuan bahasa dasar tetap memakai model ML Kit offline.
 
-## Game otomatis dari balon mengambang
+## Game otomatis: seleksi wilayah dan tampilan hasil
 
-1. Buka **Terjemahan layar** di TCD, tekan **Mulai**, lalu setujui izin Android.
-2. Buka game dan tampilkan percakapannya dengan orientasi layar yang akan dipakai.
-3. Tahan balon TCD → **Game otomatis · pilih area**. Seret kotak hijau hanya pada teks dialog, sisakan ruang di atas atau bawah, lalu tekan **Mulai otomatis**.
-4. Lanjutkan percakapan di game. Subtitle Indonesia diperbarui otomatis ketika teks baru terbaca sama dua kali. Sentuhan pada subtitle diteruskan ke game. Ketuk balon untuk jeda/lanjut; tahan untuk menu. Membuka menu otomatis menjeda pemantauan.
+1. Aktifkan **Terjemahan layar → Mulai**, setujui izin Android, lalu buka game.
+2. **Ketuk balon TCD** untuk menampilkan kotak seleksi. Geser bagian tengahnya untuk memindahkan kotak; tarik salah satu sudut untuk memperbesar/memperkecil. Seret di luar kotak untuk menggambar wilayah baru. Sisakan ruang di atas atau bawah untuk hasil.
+3. Pilih **Warna & latar** bila ingin mengatur hasil: geser Kepekatan latar, pilih Putih/Kuning/Hijau/Biru muda/Hitam untuk warna teks. **0%** menghilangkan latar sehingga hanya teks yang terlihat. Pengaturan disimpan lokal. Tekan Selesai untuk kembali ke seleksi.
+4. Tekan **Mulai otomatis**. Kotak seleksi dan pegangannya hilang. Teks hasil muncul pada panel terpisah dekat wilayah pilihan. Lanjutkan melalui **Next game**, tanpa menutup hasil. Panel hasil tidak menerima sentuhan.
 
-Subtitle muncul di dekat area dialog, di luar kotak pemindaian agar tidak diterjemahkan ulang. Balon yang masuk ke area dialog dipindah keluar sebelum pembacaan. Teks panjang dapat dipotong dengan elipsis; buka menu **Lihat teks terakhir** untuk membacanya lengkap. Memutar layar mengakhiri mode otomatis: pilih ulang area setelah orientasi berubah. **Akhiri mode otomatis** mengembalikan balon ke mode ketuk manual. Tombol **Hentikan** di notifikasi mengakhiri sesi.
+Ketuk balon untuk jeda/lanjut; tahan untuk menu, memilih ulang wilayah, atau mengubah Warna & latar. Membuka menu menjeda pemantauan. Pita hasil berada di luar wilayah yang dibaca agar terjemahan tidak terbaca ulang sebagai teks game. Hasil tidak berupa screenshot game yang membeku dan tidak memasang toolbar Asli/Teks/Ulang/Tutup. Dari hasil manual lama, tombol **Otomatis di game** membuka seleksi untuk beralih ke mode ini.
 
-Tidak perlu membuat atau menyimpan screenshot sendiri. Android tetap memakai MediaProjection untuk membaca frame layar di RAM. Mode ini memeriksa area berkala (sekitar 900 ms setelah pemrosesan selesai), satu proses pada satu waktu; ada jeda pembacaan dan terjemahan, bukan pergantian teks seketika. Animasi huruf yang berhenti sebentar bisa dianggap selesai. Kecepatan tergantung HP, font dan panjang dialog. Layar yang dilindungi tidak dapat dibaca. Model bahasa tetap ML Kit offline; model diunduh saat persiapan, tanpa server milik pengguna.
+Mode tambahan **Game layar penuh · otomatis** tersedia di menu: memindai layar di bawah pita hasil atas tanpa pemilihan area. Mode manual **Terjemahkan layar** tetap tersedia. Teks panjang memakai elipsis dan dapat dibaca lengkap melalui Lihat teks terakhir. Mengubah ukuran/orientasi layar mengakhiri mode otomatis; pilih ulang area setelahnya. Hentikan sesi melalui notifikasi. Pembacaan menunggu dua pengenalan teks yang sama; ada jeda pemrosesan bergantung HP. Layar terlindungi tidak dapat dibaca. OCR dan terjemahan diproses lokal, tanpa menyimpan frame layar.
 
 ## Mulai
 
