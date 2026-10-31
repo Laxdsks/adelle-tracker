@@ -1,8 +1,19 @@
-# TCD 0.3.11
+# TCD 0.4.0
 
 Browser ringan dengan terjemahan Inggris → Indonesia untuk teks, gambar, dokumen, situs dan layar aplikasi lain. Tampilan memakai komponen Android native, tanpa menambahkan iklan, animasi berat atau pustaka UI baru.
 
 Versi 0.3.11 menambahkan konteks sebelum/sesudah kelompok dialog, jika tersedia dan muat dalam batas pemrosesan. Hanya hasil balon sasaran ditampilkan. Pembandingan hasil OCR menjaga kata negasi dan angka agar bacaan baru tidak membalik makna atau mengganti jumlah. Ini perbaikan alur; kemampuan bahasa dasar tetap memakai model ML Kit offline.
+
+## Game otomatis dari balon mengambang
+
+1. Buka **Terjemahan layar** di TCD, tekan **Mulai**, lalu setujui izin Android.
+2. Buka game dan tampilkan percakapannya dengan orientasi layar yang akan dipakai.
+3. Tahan balon TCD → **Game otomatis · pilih area**. Seret kotak hijau hanya pada teks dialog, sisakan ruang di atas atau bawah, lalu tekan **Mulai otomatis**.
+4. Lanjutkan percakapan di game. Subtitle Indonesia diperbarui otomatis ketika teks baru terbaca sama dua kali. Sentuhan pada subtitle diteruskan ke game. Ketuk balon untuk jeda/lanjut; tahan untuk menu. Membuka menu otomatis menjeda pemantauan.
+
+Subtitle muncul di dekat area dialog, di luar kotak pemindaian agar tidak diterjemahkan ulang. Balon yang masuk ke area dialog dipindah keluar sebelum pembacaan. Teks panjang dapat dipotong dengan elipsis; buka menu **Lihat teks terakhir** untuk membacanya lengkap. Memutar layar mengakhiri mode otomatis: pilih ulang area setelah orientasi berubah. **Akhiri mode otomatis** mengembalikan balon ke mode ketuk manual. Tombol **Hentikan** di notifikasi mengakhiri sesi.
+
+Tidak perlu membuat atau menyimpan screenshot sendiri. Android tetap memakai MediaProjection untuk membaca frame layar di RAM. Mode ini memeriksa area berkala (sekitar 900 ms setelah pemrosesan selesai), satu proses pada satu waktu; ada jeda pembacaan dan terjemahan, bukan pergantian teks seketika. Animasi huruf yang berhenti sebentar bisa dianggap selesai. Kecepatan tergantung HP, font dan panjang dialog. Layar yang dilindungi tidak dapat dibaca. Model bahasa tetap ML Kit offline; model diunduh saat persiapan, tanpa server milik pengguna.
 
 ## Mulai
 
